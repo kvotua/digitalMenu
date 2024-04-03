@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.schemas import JWToken, UserId
-from app.utils import jwt_to_id
 
 from .schemas import User
 from .service import create_user, get_info
+from .utils import jwt_to_id
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

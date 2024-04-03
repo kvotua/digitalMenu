@@ -2,9 +2,9 @@ from fastapi import HTTPException, status
 
 from app.database import users_collection
 from app.schemas import JWToken, UserId
-from app.utils import id_to_jwt
 
 from .schemas import User
+from .utils import id_to_jwt
 
 
 def create_user() -> JWToken:
