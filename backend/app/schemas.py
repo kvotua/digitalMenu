@@ -1,25 +1,15 @@
-from typing import NewType, Optional
+from typing import NewType
 
 from pydantic import BaseModel, Field
 from pydantic_extra_types.color import Color
-from utils import generate_random_username, get_random_id
+
+from .utils import get_random_id
 
 UserId = NewType("UserId", str)
 TagId = NewType("TagId", str)
 ProductId = NewType("ProductId", str)
 CompositionId = NewType("CompositionId", str)
-
-
-class UserLikes(BaseModel):
-    products: list[ProductId] = []
-    compositions: list[CompositionId] = []
-
-
-class User(BaseModel):
-    id: UserId = Field(default_factory=lambda: UserId(get_random_id()))
-    likes: UserLikes = Field(default_factory=lambda: UserLikes())
-    username: str = Field(default_factory=generate_random_username, min_length=1)
-    password: Optional[str] = None
+JWToken = NewType("JWToken", str)
 
 
 class Tag(BaseModel):
