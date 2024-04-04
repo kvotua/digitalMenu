@@ -9,7 +9,7 @@ from app.tags.schemas import Tag
 
 
 def create_tag(name: str, color: Color) -> TagId:
-    tag = Tag(name=name, color=color)
+    tag = Tag(name=name, color=color.as_hex())
     tags_collection.insert_one(tag.model_dump())
     return tag.id
 
