@@ -6,6 +6,7 @@ import { Tag } from "src/features/Tag/Tag";
 
 const Header: React.FC = () => {
   const [tagId, setTagId] = useState<string>("0");
+  const isAdmin = true;
   return (
     <>
       <header className={style.header}>
@@ -29,13 +30,21 @@ const Header: React.FC = () => {
             </li>
           ))}
         </ul>
-
-        <Link to={"/cart"} className={style.cart}>
-          <div className={style.innerTags}>
-            <img src="/cart.svg" className="w-10 h-10" />
-          </div>
-          <span className={style.innerText}>Корзина</span>
-        </Link>
+        {isAdmin ? (
+          <Link to={"/tag/add"} className={style.cart}>
+            <div className={style.innerTags}>
+              <img src="/add.svg" className="w-10 h-10" />
+            </div>
+            <span className={style.innerText}>Добавить</span>
+          </Link>
+        ) : (
+          <Link to={"/cart"} className={style.cart}>
+            <div className={style.innerTags}>
+              <img src="/cart.svg" className="w-10 h-10" />
+            </div>
+            <span className={style.innerText}>Корзина</span>
+          </Link>
+        )}
       </header>
       <Outlet />
     </>

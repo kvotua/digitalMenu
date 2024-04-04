@@ -3,7 +3,7 @@ import { CardCollection } from "src/entities/CardCollection/CardCollection";
 const Home: React.FC = () => {
   return (
     <main className="container">
-      <section className="columns-2 gap-5 max-[370px]:gap-2">
+      <section className="columns-2 gap-3">
         <CardCollection id="1" image="/image.jpeg" />
         <CardCollection
           id="2"
