@@ -4,6 +4,9 @@ package-mode = false
 [tool.flake8]
 max-line-length = 88
 
+[tool.isort]
+profile = "black"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 uvicorn = "^0.29.0"

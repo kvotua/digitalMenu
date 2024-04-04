@@ -2,9 +2,9 @@ from typing import Optional
 
 from fastapi import HTTPException, status
 
-from app.compositions.schemas import Composition
-from app.database import compositions_collection, tags_collection
-from app.schemas import CompositionId, TagId
+from app.compositions.schemas import Composition, Point
+from app.database import compositions_collection, products_collection, tags_collection
+from app.schemas import CompositionId, ProductId, TagId
 
 
 def create_composition() -> CompositionId:
@@ -35,6 +35,33 @@ def attach_tag(composition_id: CompositionId, tag_id: TagId) -> None:
     )
     if result.modified_count == 0:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+
+
+def attach_product(
+    composition_id: CompositionId, product_id: ProductId, x: float, y: float
+) -> None:
+    if products_collection.count_documents({"id": product_id}) == 0:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong product ID")
+    point = Point(product_id=product_id, x=x, y=y)
+    result = compositions_collection.update_one(
+        {"id": composition_id},
+        {"$push": {"points": point.model_dump()}},
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+
+
+def remove_product(composition_id: CompositionId, product_id: ProductId) -> None:
+    if compositions_collection.count_documents({"id": composition_id}) == 0:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    result = compositions_collection.update_one(
+        {"id": composition_id},
+        {"$pull": {"points": {"product_id": product_id}}},
+    )
+    if result.modified_count == 0:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "Product not attached to composition"
+        )
 
 
 def delete_tag(composition_id: CompositionId, tag_id: TagId) -> None:
