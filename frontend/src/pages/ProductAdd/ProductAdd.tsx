@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { apiWithAuth } from "src/app/Http";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
@@ -11,6 +12,8 @@ const ProductAdd: React.FC = () => {
     price: "",
   });
   const [img, setImg] = useState<null | File>(null);
+  const navigate = useNavigate();
+
   const formData = new FormData();
   if (img) {
     formData.append("image", img);
@@ -21,7 +24,8 @@ const ProductAdd: React.FC = () => {
 
   const { mutate } = useMutation({
     mutationKey: "postProduct",
-    mutationFn: async () => apiWithAuth.post("/products/", formData),
+    mutationFn: async () =>
+      apiWithAuth.post("/products/", formData).then(() => navigate(-1)),
   });
   return (
     <main className="container pt-5">

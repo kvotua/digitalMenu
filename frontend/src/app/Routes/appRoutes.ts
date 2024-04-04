@@ -5,6 +5,7 @@ import { Admin } from "src/pages/Admin/Admin";
 import { TagAdd } from "src/pages/TagAdd/TagAdd";
 import { Composition } from "src/pages/Composition/Composition";
 import { ProductAdd } from "src/pages/ProductAdd/ProductAdd";
+import { CompositionAdd } from "src/pages/CompositionAdd/CompositionAdd";
 
 export const appRoutes = [
   {
@@ -33,5 +34,9 @@ export const authRoutes = [
   {
     path: RoutingConstants.ADD_PRODUCT,
     Element: ProductAdd,
+  },
+  {
+    path: RoutingConstants.ADD_COMPOSITION,
+    Element: CompositionAdd,
   },
 ];

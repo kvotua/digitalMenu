@@ -19,8 +19,12 @@ const Home: React.FC = () => {
   return (
     <main className="container">
       <section className="columns-2 gap-3">
-        <Link to={'/composition/add'} className={style.addButton}>Добавить композицию</Link>
-        <Link to={'/product/add'} className={style.addButton}>Добавить продукт</Link>
+        <Link to={"add/composition/"} className={style.addButton}>
+          Добавить композицию
+        </Link>
+        <Link to={"add/product/"} className={style.addButton}>
+          Добавить продукт
+        </Link>
         {compositions?.map(({ id }) => (
           <CardComposotion
             id={id}
