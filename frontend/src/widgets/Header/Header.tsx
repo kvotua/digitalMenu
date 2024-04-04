@@ -1,8 +1,8 @@
 import { Link, Outlet } from "react-router-dom";
 import style from "./Header.module.scss";
-import { Tag } from "src/shared/Tag/Tag";
 import { mokTags } from "./Tag.mok";
 import { useState } from "react";
+import { Tag } from "src/features/Tag/Tag";
 
 const Header: React.FC = () => {
   const [tagId, setTagId] = useState<string>("0");

@@ -1,10 +1,10 @@
 .header{
-    @apply w-full py-5 flex overflow-y-scroll;
+    @apply w-full my-5 flex justify-between overflow-y-scroll;
     .container{
         @apply flex gap-5 pl-5;
     }
     .cart{
-        @apply text-center sticky right-0 bg-white px-5;  
+        @apply text-center sticky right-0 bg-white px-5 flex flex-col ;  
     
         .innerTags{
             @apply w-16 h-16 rounded-full flex justify-center items-center;

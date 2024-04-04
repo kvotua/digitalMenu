@@ -1,7 +1,14 @@
+import { Product } from "src/entities/Product/Product";
+import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
+
 const Collection: React.FC = () => {
   return (
-    <main className="container wrapper">
-      <div className="">Collection</div>
+    <main className="">
+      <div className="w-full">
+        <img src="/image.jpeg" alt="image" className="rounded" />
+      </div>
+      <Product />
+      <BottomPanel />
     </main>
   );
 };
