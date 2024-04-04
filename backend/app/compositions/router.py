@@ -1,27 +1,14 @@
 import os
 from typing import Annotated, Optional
 
-from fastapi import (
-    APIRouter,
-    Body,
-    Header,
-    HTTPException,
-    Path,
-    Query,
-    UploadFile,
-    status,
-)
+from fastapi import (APIRouter, Body, Header, HTTPException, Path, Query,
+                     UploadFile, status)
 from fastapi.responses import FileResponse
 
 from app.compositions.schemas import Composition
-from app.compositions.service import (
-    attach_tag,
-    create_composition,
-    delete_composition_by_id,
-    get_composition,
-    get_compositions,
-    delete_tag,
-)
+from app.compositions.service import (attach_tag, create_composition,
+                                      delete_composition_by_id, delete_tag,
+                                      get_composition, get_compositions)
 from app.schemas import CompositionId, JWToken, TagId
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])

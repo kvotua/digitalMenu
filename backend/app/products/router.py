@@ -1,7 +1,8 @@
 import os
 from typing import Annotated
 
-from fastapi import APIRouter, Form, Header, HTTPException, Path, UploadFile, status
+from fastapi import (APIRouter, Form, Header, HTTPException, Path, UploadFile,
+                     status)
 from fastapi.responses import FileResponse
 
 from app.products.schemas import Product
