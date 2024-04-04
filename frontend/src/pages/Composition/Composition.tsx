@@ -1,7 +1,7 @@
 import { Product } from "src/entities/Product/Product";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 
-const Collection: React.FC = () => {
+const Composition: React.FC = () => {
   return (
     <main className="">
       <div className="w-full">
@@ -13,4 +13,4 @@ const Collection: React.FC = () => {
   );
 };
 
-export { Collection };
+export { Composition };

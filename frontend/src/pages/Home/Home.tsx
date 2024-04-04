@@ -1,24 +1,28 @@
-import { CardCollection } from "src/entities/CardCollection/CardCollection";
+import { useQuery } from "react-query";
+import { apiWithAuth } from "src/app/Http";
+import { IComposition } from "src/app/Types/composition.type";
+import { CardComposotion } from "src/entities/CardComposition/CardComposotion";
 
 const Home: React.FC = () => {
+  const tagId = "";
+  const { data: compositions } = useQuery({
+    queryKey: "getComposition",
+    queryFn: async () =>
+      apiWithAuth
+        .get<Omit<IComposition, "points" | "tags">[]>(
+          `/compositions/?tag=${tagId}`
+        )
+        .then(({ data }) => data),
+  });
   return (
     <main className="container">
       <section className="columns-2 gap-3">
-        <CardCollection id="1" image="/image.jpeg" />
-        <CardCollection
-          id="2"
-          image="https://images.unsplash.com/photo-1554080353-a576cf803bda?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D"
-        />
-        <CardCollection
-          id="2"
-          image="https://images.unsplash.com/photo-1554080353-a576cf803bda?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D"
-        />
-        <CardCollection id="1" image="/image.jpeg" />
-        <CardCollection id="1" image="/image.jpeg" />
-        <CardCollection
-          id="2"
-          image="https://images.unsplash.com/photo-1554080353-a576cf803bda?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D"
-        />
+        {compositions?.map(({ id }) => (
+          <CardComposotion
+            id={id}
+            image={`${import.meta.env.VITE_API_URL}/composition/${id}/image`}
+          />
+        ))}
       </section>
     </main>
   );

@@ -1,13 +1,14 @@
-import { Collection } from "src/pages/Collection/Collection";
 import { RoutingConstants } from "src/app/Constants/RoutingConstants";
 import { Auth } from "src/pages/Auth/Auth";
 import { Cart } from "src/pages/Cart/Cart";
 import { Admin } from "src/pages/Admin/Admin";
+import { TagAdd } from "src/pages/TagAdd/TagAdd";
+import { Composition } from "src/pages/Composition/Composition";
 
 export const appRoutes = [
   {
-    path: RoutingConstants.COLLECTION,
-    Element: Collection,
+    path: RoutingConstants.COMPOSITION,
+    Element: Composition,
   },
   {
     path: RoutingConstants.AUTH,
@@ -23,5 +24,9 @@ export const authRoutes = [
   {
     path: RoutingConstants.ADMIN,
     Element: Admin,
-  }
-]
+  },
+  {
+    path: RoutingConstants.ADD_TAGS,
+    Element: TagAdd,
+  },
+];

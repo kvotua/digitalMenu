@@ -1,8 +1,9 @@
 export enum RoutingConstants {
   HOME = "/",
-  COLLECTION = "/collection/:id",
+  COMPOSITION = "/composition/:id",
   AUTH = "/auth",
   CART = "/cart",
 
   ADMIN = "/admin",
+  ADD_TAGS = '/tag/add'
 }
