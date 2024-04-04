@@ -1,6 +1,9 @@
-import { ChangeEvent, HTMLAttributes } from "react";
+import { ChangeEvent, InputHTMLAttributes } from "react";
 
-export interface ITextField extends HTMLAttributes<HTMLInputElement> {
-  value: string;
-  setValue: (e: ChangeEvent<HTMLInputElement>) => void;
+export interface ITextField
+  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+  value: string | number;
+  setValue: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  type?: string;
+  big?: boolean;
 }

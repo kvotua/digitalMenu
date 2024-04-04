@@ -2,6 +2,8 @@ import { useQuery } from "react-query";
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
 import { CardComposotion } from "src/entities/CardComposition/CardComposotion";
+import style from "./Home.module.scss";
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
   const tagId = "";
@@ -17,6 +19,8 @@ const Home: React.FC = () => {
   return (
     <main className="container">
       <section className="columns-2 gap-3">
+        <Link to={'/composition/add'} className={style.addButton}>Добавить композицию</Link>
+        <Link to={'/product/add'} className={style.addButton}>Добавить продукт</Link>
         {compositions?.map(({ id }) => (
           <CardComposotion
             id={id}
