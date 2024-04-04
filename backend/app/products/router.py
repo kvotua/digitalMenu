@@ -1,12 +1,20 @@
 import os
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import (APIRouter, Form, Header, HTTPException, Path, UploadFile,
-                     status)
+from fastapi import (
+    APIRouter,
+    Body,
+    Form,
+    Header,
+    HTTPException,
+    Path,
+    UploadFile,
+    status,
+)
 from fastapi.responses import FileResponse
 
 from app.products.schemas import Product
-from app.products.service import create_product, get_product
+from app.products.service import create_product, delete, get_product, update
 from app.schemas import JWToken, ProductId
 
 router = APIRouter(prefix="/products", tags=["Products"])
@@ -55,3 +63,28 @@ async def post_product(
     with open(f"/storage/{product_id}", "wb") as file:
         file.write(image.file.read())
     return product_id
+
+
+@router.patch(
+    "/{id}",
+    description="Update product info (no JWT verification now)",
+)
+async def update_product_info(
+    token: Annotated[JWToken, Header()],
+    id: Annotated[ProductId, Path()],
+    name: Optional[Annotated[str, Body(min_length=1)]],
+    description: Optional[Annotated[str, Body()]],
+    price: Optional[Annotated[int, Body(gt=0)]],
+) -> None:
+    update(id, name, description, price)
+
+
+@router.delete(
+    "/{id}",
+    description="Also removes it from all compositions (no JWT verification now)",
+)
+async def delete_product(
+    token: Annotated[JWToken, Header()],
+    id: Annotated[ProductId, Path()],
+) -> None:
+    delete(id)

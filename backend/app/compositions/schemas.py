@@ -7,8 +7,8 @@ from app.schemas import CompositionId, ProductId, TagId
 
 class Point(BaseModel):
     product_id: ProductId
-    x: float = Field(gt=0, lt=1)
-    y: float = Field(gt=0, lt=1)
+    x: float = Field(ge=0, le=1)
+    y: float = Field(ge=0, le=1)
 
 
 class Composition(BaseModel):
