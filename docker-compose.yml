@@ -10,6 +10,8 @@ services:
     build: ./backend
     depends_on:
       - mongo
+    volumes:
+      - storage_volume:/storage
     ports:
       - "8000:8000"
 
@@ -20,3 +22,4 @@ services:
 
 volumes:
   mongo_volume:
+  storage_volume:
