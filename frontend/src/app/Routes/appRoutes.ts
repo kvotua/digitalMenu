@@ -2,6 +2,7 @@ import { Collection } from "src/pages/Collection/Collection";
 import { Home } from "src/pages/Home/Home";
 import { RoutingConstants } from "src/app/Constants/RoutingConstants";
 import { Auth } from "src/pages/Auth/Auth";
+import { Cart } from "src/pages/Cart/Cart";
 
 export const appRoutes = [
   {
@@ -15,5 +16,9 @@ export const appRoutes = [
   {
     path: RoutingConstants.AUTH,
     Element: Auth,
+  },
+  {
+    path: RoutingConstants.CART,
+    Element: Cart,
   },
 ];

@@ -19,7 +19,7 @@ export default {
       addUtilities({
         '.wrapper': {
           width: '100%',
-          paddingTop: '50px'
+          paddingTop: '120px'
         },
       })
     })

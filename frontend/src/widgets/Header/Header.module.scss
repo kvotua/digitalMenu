@@ -1,0 +1,19 @@
+.header{
+    @apply w-full fixed py-5 flex overflow-y-scroll;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    .container{
+        @apply flex gap-5 pl-5;
+    }
+    .cart{
+        @apply text-center sticky right-0 bg-white px-5;  
+    
+        .innerTags{
+            @apply w-16 h-16 rounded-full flex justify-center items-center;
+        }
+        .innerText {
+            @apply font-light whitespace-nowrap text-sm;
+        }
+    }
+}

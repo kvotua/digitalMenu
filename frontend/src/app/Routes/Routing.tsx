@@ -7,7 +7,7 @@ const Routing: React.FC = () => {
     <Routes>
       <Route element={<Header />}>
         {appRoutes.map(({ Element, path }) => (
-          <Route path={path} element={<Element />} />
+          <Route path={path} key={path} element={<Element />} />
         ))}
       </Route>
     </Routes>
