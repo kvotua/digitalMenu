@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.products.router import router as products_router
 from app.users.router import router as users_router
+from app.compositions.router import router as compositions_router
+from app.tags.router import router as tags_router
 
 app = FastAPI()
 app.add_middleware(
@@ -15,3 +17,5 @@ app.add_middleware(
 
 app.include_router(users_router)
 app.include_router(products_router)
+app.include_router(compositions_router)
+app.include_router(tags_router)

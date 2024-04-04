@@ -1,8 +1,7 @@
 import os
 from typing import Annotated
 
-from fastapi import (APIRouter, Form, Header, HTTPException, Path, UploadFile,
-                     status)
+from fastapi import APIRouter, Form, Header, HTTPException, Path, UploadFile, status
 from fastapi.responses import FileResponse
 
 from app.products.schemas import Product
@@ -10,23 +9,6 @@ from app.products.service import create_product, get_product
 from app.schemas import JWToken, ProductId
 
 router = APIRouter(prefix="/products", tags=["Products"])
-
-
-@router.post(
-    "/",
-    description="Create new product (no JWT, file type and file size verification now)",
-)
-async def post_product(
-    token: Annotated[JWToken, Header()],
-    image: UploadFile,
-    name: Annotated[str, Form(min_length=1)],
-    description: Annotated[str, Form(min_length=1)],
-    price: Annotated[int, Form(gt=0)],
-) -> ProductId:
-    product_id = create_product(name, description, price)
-    with open(f"/storage/{product_id}", "wb") as file:
-        file.write(image.file.read())
-    return product_id
 
 
 @router.get(
@@ -55,3 +37,20 @@ async def get_image(
     if not os.path.isfile(path):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found")
     return FileResponse(path, media_type="image/*")
+
+
+@router.post(
+    "/",
+    description="Create new product (no JWT, file type and file size verification now)",
+)
+async def post_product(
+    token: Annotated[JWToken, Header()],
+    image: UploadFile,
+    name: Annotated[str, Form(min_length=1)],
+    description: Annotated[str, Form(min_length=1)],
+    price: Annotated[int, Form(gt=0)],
+) -> ProductId:
+    product_id = create_product(name, description, price)
+    with open(f"/storage/{product_id}", "wb") as file:
+        file.write(image.file.read())
+    return product_id
