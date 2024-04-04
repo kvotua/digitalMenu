@@ -1,7 +1,15 @@
+import { CardCollection } from "src/entities/CardCollection/CardCollection";
+
 const Home: React.FC = () => {
   return (
-    <main className="container wrapper">
-      <div className="">Home</div>
+    <main className="container">
+      <section className="grid grid-cols-2 gap-5">
+        <CardCollection id="1" image="/image.jpeg" />
+        <CardCollection
+          id="1"
+          image="https://images.unsplash.com/photo-1554080353-a576cf803bda?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D"
+        />
+      </section>
     </main>
   );
 };

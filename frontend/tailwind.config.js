@@ -17,10 +17,10 @@ export default {
   plugins: [
     plugin(function({addUtilities}) {
       addUtilities({
-        '.wrapper': {
-          width: '100%',
-          paddingTop: '120px'
-        },
+        // '.wrapper': {
+        //   width: '100%',
+        //   paddingTop: '120px'
+        // },
       })
     })
   ],
