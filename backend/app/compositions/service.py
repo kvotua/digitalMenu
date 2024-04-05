@@ -7,10 +7,29 @@ from app.database import compositions_collection, products_collection, tags_coll
 from app.schemas import CompositionId, ProductId, TagId
 
 
-def create_composition() -> CompositionId:
-    composition = Composition()
+def create_composition(
+    points: Optional[list[Point]], tags: Optional[list[TagId]]
+) -> CompositionId:
+    if points is None:
+        points = []
+    if tags is None:
+        tags = []
+    composition = Composition(points=points, tags=tags)
+    for point in points:
+        if products_collection.count_documents({"id": point.product_id}) == 0:
+            raise HTTPException(
+                status.HTTP_404_NOT_FOUND, f"Wrong product ID: {point.product_id}"
+            )
+    for tag in tags:
+        if tags_collection.find_one({"id": tag}) is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong tag ID: {tag}")
     compositions_collection.insert_one(composition.model_dump())
     return composition.id
+
+
+def exist(id: CompositionId) -> bool:
+    result = compositions_collection.find_one({"id": id})
+    return result is not None
 
 
 def get_composition(id: CompositionId) -> Composition:
