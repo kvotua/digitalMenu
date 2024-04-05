@@ -10,6 +10,9 @@ export default defineConfig({
       include: "**/*.svg?react",
     }),
   ],
+  server: {
+    host: true,
+  },
   resolve: {
     alias: {
       src: "/src",
