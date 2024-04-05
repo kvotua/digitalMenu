@@ -2,23 +2,16 @@ import { Link, Outlet } from "react-router-dom";
 import style from "./Header.module.scss";
 import { useState } from "react";
 import { Tag } from "src/features/Tag/Tag";
-import { useQuery } from "react-query";
-import { apiWithAuth } from "src/app/Http";
-import { ITag } from "src/app/Types/tag.type";
+import { useGetTags } from "src/app/services/useGetTags";
 
 const Header: React.FC = () => {
   const [tagId, setTagId] = useState<string>("0");
-  const { data: tags } = useQuery({
-    queryKey: "getTags",
-    queryFn: async () => {
-      return await apiWithAuth.get<ITag[]>("/tags/").then(({ data }) => data);
-    },
-  });
+  const { data: tags } = useGetTags();
 
   const isAdmin = true;
   return (
     <>
-      <header className={style.header}>
+      <header className={`${style.header}`}>
         <ul className={style.container}>
           <Tag
             color={"red"}

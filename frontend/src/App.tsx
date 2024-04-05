@@ -1,8 +1,8 @@
 import { Routing } from "./app/Routes/Routing";
-import { useGetUser } from "./app/hooks/useGetUser";
+import { useGetUser } from "./app/services/useGetUser";
 
 function App() {
-  useGetUser()
+  useGetUser();
   return <Routing />;
 }
 

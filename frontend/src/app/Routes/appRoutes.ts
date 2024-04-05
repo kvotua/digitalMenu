@@ -6,6 +6,7 @@ import { TagAdd } from "src/pages/TagAdd/TagAdd";
 import { Composition } from "src/pages/Composition/Composition";
 import { ProductAdd } from "src/pages/ProductAdd/ProductAdd";
 import { CompositionAdd } from "src/pages/CompositionAdd/CompositionAdd";
+import { Search } from "src/pages/Search/Search";
 
 export const appRoutes = [
   {
@@ -19,6 +20,10 @@ export const appRoutes = [
   {
     path: RoutingConstants.CART,
     Element: Cart,
+  },
+  {
+    path: RoutingConstants.SEARCH,
+    Element: Search,
   },
 ];
 

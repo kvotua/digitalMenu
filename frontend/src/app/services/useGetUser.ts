@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "react-query";
-import { useAppDispatch } from "./useAppDispatch";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 import { api } from "../Http";
 import { IUser } from "../Types/user.type";
 import { setUser } from "../Store/slices/userSlice";

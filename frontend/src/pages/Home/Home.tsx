@@ -4,6 +4,7 @@ import { IComposition } from "src/app/Types/composition.type";
 import { CardComposotion } from "src/entities/CardComposition/CardComposotion";
 import style from "./Home.module.scss";
 import { Link } from "react-router-dom";
+import { BottomUserPanel } from "src/widgets/BottomUserPanel/BottomUserPanel";
 
 const Home: React.FC = () => {
   const tagId = "";
@@ -32,6 +33,7 @@ const Home: React.FC = () => {
           />
         ))}
       </section>
+      <BottomUserPanel />
     </main>
   );
 };

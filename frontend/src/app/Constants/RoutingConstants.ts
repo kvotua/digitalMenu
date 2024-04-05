@@ -3,6 +3,7 @@ export enum RoutingConstants {
   COMPOSITION = "/composition/:id",
   AUTH = "/auth",
   CART = "/cart",
+  SEARCH = '/search',
 
   ADMIN = "/admin",
   ADD_TAGS = "/tag/add",

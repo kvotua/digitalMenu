@@ -1,0 +1,19 @@
+.drop_container{
+    @apply appearance-none bg-white p-5 outline-none border rounded-2xl relative overflow-visible;
+
+    &::-ms-expand {
+        display: none ;
+    }   
+    
+
+}
+.drop_container::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    background: #000;
+    z-index: 99999;
+}

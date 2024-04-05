@@ -1,7 +1,7 @@
 .header{
-    @apply w-full my-5 flex justify-between overflow-y-scroll;
+    @apply w-full my-5 flex justify-between overflow-y-scroll pl-5;
     .container{
-        @apply flex gap-5 pl-5;
+        @apply flex gap-5;
     }
     .cart{
         @apply text-center sticky right-0 bg-white px-5 flex flex-col ;  

@@ -4,17 +4,20 @@ import { apiWithAuth } from "src/app/Http";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 import ColorPicker from "src/app/assets/ColorPicker.svg?react";
+import { useNavigate } from "react-router-dom";
 
 const TagAdd: React.FC = () => {
   const [tagInfo, setTagInfo] = useState({
     name: "",
     color: "#000",
   });
+  const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationKey: "addTag",
     mutationFn: async () => {
       return apiWithAuth.post("/tags/", tagInfo);
     },
+    onSuccess: () => navigate(-1),
   });
   return (
     <main className="container pt-5">
@@ -31,9 +34,7 @@ const TagAdd: React.FC = () => {
             id="color"
             className="hidden"
           />
-          <div
-            className="w-16 h-16 rounded-full border flex justify-center items-center"
-          >
+          <div className="w-16 h-16 rounded-full border flex justify-center items-center">
             <ColorPicker width="30px" fill={tagInfo.color} />
           </div>
         </label>
