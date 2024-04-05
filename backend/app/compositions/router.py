@@ -13,13 +13,14 @@ from fastapi import (
 )
 from fastapi.responses import FileResponse
 
-from app.compositions.schemas import Composition
+from app.compositions.schemas import Composition, Point
 from app.compositions.service import (
     attach_product,
     attach_tag,
     create_composition,
     delete_composition_by_id,
     delete_tag,
+    exist,
     get_composition,
     get_compositions,
     remove_product,
@@ -74,12 +75,26 @@ async def get_all_compositions(
 )
 async def post_composition(
     token: Annotated[JWToken, Header()],
-    image: UploadFile,
+    points: Annotated[Optional[list[Point]], Body()] = None,
+    tags: Annotated[Optional[list[TagId]], Body()] = None,
 ) -> CompositionId:
-    composition_id = create_composition()
-    with open(f"/storage/{composition_id}", "wb") as file:
-        file.write(image.file.read())
+    composition_id = create_composition(points, tags)
     return composition_id
+
+
+@router.post(
+    "/{id}/image",
+    description="Add image to composition (no JWT, file type/size verification now)",
+)
+async def post_composition_image(
+    token: Annotated[JWToken, Header()],
+    id: Annotated[CompositionId, Path()],
+    image: UploadFile,
+) -> None:
+    if not exist(id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    with open(f"/storage/{id}", "wb") as file:
+        file.write(image.file.read())
 
 
 @router.post(
