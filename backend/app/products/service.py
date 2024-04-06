@@ -13,6 +13,10 @@ def create_product(name: str, description: str, price: int) -> ProductId:
     return product.id
 
 
+def get_all() -> list[Product]:
+    return [Product(**product) for product in products_collection.find({})]
+
+
 def get_product(id: ProductId) -> Product:
     result = products_collection.find_one({"id": id})
     if result is None:
