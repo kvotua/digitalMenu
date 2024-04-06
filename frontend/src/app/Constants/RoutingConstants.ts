@@ -3,10 +3,13 @@ export enum RoutingConstants {
   COMPOSITION = "/composition/:id",
   AUTH = "/auth",
   CART = "/cart",
-  SEARCH = '/search',
+  SEARCH = "/search",
+  PROFILE = "/profile/:userId",
+  FAVORITE = "/profile/:userId/favorite",
+
 
   ADMIN = "/admin",
   ADD_TAGS = "/tag/add",
   ADD_PRODUCT = "add/product/",
-  ADD_COMPOSITION = "add/composition"
+  ADD_COMPOSITION = "add/composition",
 }

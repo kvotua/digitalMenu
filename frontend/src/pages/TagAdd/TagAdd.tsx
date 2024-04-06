@@ -34,7 +34,7 @@ const TagAdd: React.FC = () => {
             id="color"
             className="hidden"
           />
-          <div className="w-16 h-16 rounded-full border flex justify-center items-center">
+          <div className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center">
             <ColorPicker width="30px" fill={tagInfo.color} />
           </div>
         </label>

@@ -7,6 +7,8 @@ import { Composition } from "src/pages/Composition/Composition";
 import { ProductAdd } from "src/pages/ProductAdd/ProductAdd";
 import { CompositionAdd } from "src/pages/CompositionAdd/CompositionAdd";
 import { Search } from "src/pages/Search/Search";
+import { Profile } from "src/pages/Profile/Profile";
+import { Favorite } from "src/pages/Profile/Favorite";
 
 export const appRoutes = [
   {
@@ -24,6 +26,17 @@ export const appRoutes = [
   {
     path: RoutingConstants.SEARCH,
     Element: Search,
+  },
+];
+
+export const profileRoutes = [
+  {
+    path: RoutingConstants.PROFILE,
+    Element: Profile,
+  },
+  {
+    path: RoutingConstants.FAVORITE,
+    Element: Favorite,
   },
 ];
 

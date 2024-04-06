@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import { appRoutes, authRoutes } from "./appRoutes";
+import { appRoutes, authRoutes, profileRoutes } from "./appRoutes";
 import { Header } from "src/widgets/Header/Header";
 import { RoutingConstants } from "../Constants/RoutingConstants";
 import { Home } from "src/pages/Home/Home";
 import { Admin } from "src/pages/Admin/Admin";
+import { ProfileHeader } from "src/widgets/ProfileHeader/Profile";
 
 const Routing: React.FC = () => {
   const isAuth = true;
@@ -20,6 +21,11 @@ const Routing: React.FC = () => {
         authRoutes.map(({ Element, path }) => (
           <Route path={path} key={path} element={<Element />} />
         ))}
+      <Route element={<ProfileHeader />}>
+        {profileRoutes.map(({ Element, path }) => (
+          <Route path={path} key={path} element={<Element />} />
+        ))}
+      </Route>
     </Routes>
   );
 };

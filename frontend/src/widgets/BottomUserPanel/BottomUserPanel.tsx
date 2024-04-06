@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import style from "./BottomUserPanel.module.scss";
+import { useAppSelector } from "src/app/hooks/useAppSelector";
 
 const BottomUserPanel: React.FC = () => {
-  const isAuth = false;
+  const user = useAppSelector((state) => state.userSlice);
   return (
     <div className={style.panel__container}>
       <Link to={"/search"} className="w-8 h-8 justify-self-start rounded-full">
@@ -10,10 +11,10 @@ const BottomUserPanel: React.FC = () => {
       </Link>
 
       <Link
-        to={isAuth ? "/profile" : "/auth"}
+        to={user ? `/profile/${user.id}` : "/auth"}
         className="w-8 h-8 justify-self-end rounded-full"
       >
-        <img src={isAuth ? "/profile.svg" : "/login.svg"} onClick={() => {}} />
+        <img src={user ? "/profile.svg" : "/login.svg"} onClick={() => {}} />
       </Link>
     </div>
   );

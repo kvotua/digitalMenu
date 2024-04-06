@@ -1,5 +1,5 @@
 .drop_container{
-    @apply appearance-none bg-white p-5 outline-none border rounded-2xl relative overflow-visible;
+    @apply appearance-none bg-white p-5 outline-none border border-[#ae88f1] rounded-2xl relative overflow-visible;
 
     &::-ms-expand {
         display: none ;

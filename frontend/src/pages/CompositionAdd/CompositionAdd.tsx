@@ -27,7 +27,7 @@ const CompositionAdd: React.FC = () => {
           onChange={(e) => setImg(e.target.files && e.target.files[0])}
         />
 
-        <div className="w-full min-h-80 border flex items-center justify-center rounded-2xl relative">
+        <div className="w-full min-h-80 border border-[#ae88f1] flex items-center justify-center rounded-2xl relative">
           {img && (
             <img
               src={URL.createObjectURL(img)}
