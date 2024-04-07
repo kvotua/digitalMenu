@@ -5,7 +5,7 @@ import { IButtonPanelProps } from "./BottonPanel.model";
 const BottomPanel: React.FC<IButtonPanelProps> = ({ deleteFunc, doneFunc }) => {
   const navigate = useNavigate();
   return (
-    <div className={`${style.panel__container} ${!deleteFunc ? "py-10" : ""}`}>
+    <div className={`${style.panel__container} py-5`}>
       <img
         src="/arrowBack.svg"
         onClick={() => navigate(-1)}
