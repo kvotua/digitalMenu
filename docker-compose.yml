@@ -9,17 +9,17 @@ services:
   backend:
     build: ./backend
     depends_on:
-      - mongo
+      - dynamodb
     volumes:
       - storage_volume:/storage
     ports:
       - "8000:8000"
 
-  mongo:
-    image: mongo:latest
-    volumes:
-      - mongo_volume:/data/db
+  dynamodb:
+    command: "-jar DynamoDBLocal.jar -disableTelemetry -sharedDb"
+    image: "amazon/dynamodb-local:latest"
+    ports:
+      - "8080:8000"
 
 volumes:
-  mongo_volume:
   storage_volume:

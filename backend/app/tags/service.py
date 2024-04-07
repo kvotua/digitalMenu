@@ -3,39 +3,39 @@ from typing import Optional
 from fastapi import HTTPException, status
 from pydantic_extra_types.color import Color
 
-from app.database import compositions_collection, tags_collection
 from app.schemas import TagId
+from app.tags.models import TagModel
 from app.tags.schemas import Tag
 
 
 def create_tag(name: str, color: Color) -> TagId:
     tag = Tag(name=name, color=color.as_hex())
-    tags_collection.insert_one(tag.model_dump())
+    TagModel(**tag.model_dump()).save()
     return tag.id
 
 
 def get_all() -> list[Tag]:
-    result = tags_collection.find({})
-    return [Tag(**tag) for tag in result]
+    return [model.to_schema() for model in TagModel.scan()]
 
 
 def delete(id: TagId) -> None:
-    tags_collection.delete_one({"id": id})
-    compositions_collection.update_many(
-        {"tags": id},
-        {"$pull": {"tags": id}},
-    )
+    try:
+        model = TagModel.get(id)
+    except TagModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND)
+    model.delete()
+    # TODO: delete tag from all compositions
 
 
 def update(id: TagId, name: Optional[str], color: Optional[Color]) -> None:
     if name is None and color is None:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Any changes required")
-    updates = {}
+    try:
+        model = TagModel.get(id)
+    except TagModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND)
     if name is not None:
-        updates["name"] = name
+        model.name = name
     if color is not None:
-        updates["color"] = color.as_hex()
-    tags_collection.update_one(
-        {"id": id},
-        updates,
-    )
+        model.color = color.as_hex()
+    model.save()

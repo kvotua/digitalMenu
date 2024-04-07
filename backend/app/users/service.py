@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 
-from app.database import users_collection
 from app.schemas import JWToken, UserId
+from app.users.models import UserModel as UserModel
 
 from .schemas import User
 from .utils import id_to_jwt
@@ -9,12 +9,13 @@ from .utils import id_to_jwt
 
 def create_user() -> JWToken:
     user = User()
-    users_collection.insert_one(user.model_dump())
+    UserModel(id=user.id, username=user.username).save()
     return id_to_jwt(user.id)
 
 
-def get_info(user_id: UserId) -> User:
-    result = users_collection.find_one({"id": user_id})
-    if result is None:
+def get_info(id: UserId) -> User:
+    try:
+        model = UserModel.get(id)
+    except UserModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return User(**result)
+    return model.to_schema()
