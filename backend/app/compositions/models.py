@@ -20,12 +20,16 @@ class CompositionModel(Model):
     def to_schema(self) -> Composition:
         return Composition(
             id=CompositionId(self.id),
-            tags=list(map(lambda x: TagId(x), self.tags))
-            if self.tags is not None
-            else [],
-            points=[Point(**point) for point in self.points]
-            if self.points is not None
-            else [],
+            tags=(
+                list(map(lambda x: TagId(x), self.tags))
+                if self.tags is not None
+                else []
+            ),
+            points=(
+                [Point(**point) for point in self.points]
+                if self.points is not None
+                else []
+            ),
         )
 
 

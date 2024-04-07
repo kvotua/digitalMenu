@@ -24,16 +24,20 @@ class UserModel(Model):
             id=UserId(self.id),
             username=self.username,
             likes=UserLikes(
-                products=list(
-                    map(lambda x: ProductId(x), self.products_likes),
-                )
-                if self.products_likes is not None
-                else [],
-                compositions=list(
-                    map(lambda x: CompositionId(x), self.compositions_likes),
-                )
-                if self.compositions_likes is not None
-                else [],
+                products=(
+                    list(
+                        map(lambda x: ProductId(x), self.products_likes),
+                    )
+                    if self.products_likes is not None
+                    else []
+                ),
+                compositions=(
+                    list(
+                        map(lambda x: CompositionId(x), self.compositions_likes),
+                    )
+                    if self.compositions_likes is not None
+                    else []
+                ),
             ),
         )
 
