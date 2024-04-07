@@ -2,9 +2,11 @@ from typing import Optional
 
 from fastapi import HTTPException, status
 
+from app.compositions.models import CompositionModel
 from app.compositions.schemas import Composition, Point
-from app.database import compositions_collection, products_collection, tags_collection
+from app.products.models import ProductModel
 from app.schemas import CompositionId, ProductId, TagId
+from app.tags.models import TagModel
 
 
 def create_composition(
@@ -16,89 +18,122 @@ def create_composition(
         tags = []
     composition = Composition(points=points, tags=tags)
     for point in points:
-        if products_collection.count_documents({"id": point.product_id}) == 0:
+        try:
+            ProductModel.get(point.product_id)
+        except ProductModel.DoesNotExist:
             raise HTTPException(
                 status.HTTP_404_NOT_FOUND, f"Wrong product ID: {point.product_id}"
             )
     for tag in tags:
-        if tags_collection.find_one({"id": tag}) is None:
+        try:
+            TagModel.get(tag)
+        except TagModel.DoesNotExist:
             raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong tag ID: {tag}")
-    compositions_collection.insert_one(composition.model_dump())
+    CompositionModel(**composition.model_dump()).save()
     return composition.id
 
 
 def exist(id: CompositionId) -> bool:
-    result = compositions_collection.find_one({"id": id})
-    return result is not None
+    try:
+        CompositionModel.get(id)
+        return True
+    except CompositionModel.DoesNotExist:
+        return False
 
 
 def get_composition(id: CompositionId) -> Composition:
-    result = compositions_collection.find_one({"id": id})
-    if result is None:
+    try:
+        model = CompositionModel.get(id)
+    except CompositionModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return Composition(**result)
+    return model.to_schema()
 
 
 def get_compositions(tag: Optional[TagId] = None) -> list[CompositionId]:
-    query = {"tags": tag} if tag is not None else {}
-    result = compositions_collection.find(query)
-    return [composition["id"] for composition in result]
+    if tag is None:
+        models = CompositionModel.scan()
+    else:
+        try:
+            TagModel.get(tag)
+        except TagModel.DoesNotExist:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong tag ID: {tag}")
+        models = CompositionModel.scan(CompositionModel.tags.contains(tag))
+    return [CompositionId(model.id) for model in models]
 
 
-def attach_tag(composition_id: CompositionId, tag_id: TagId) -> None:
-    if tags_collection.find_one({"id": tag_id}) is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong tag ID")
-    result = compositions_collection.update_one(
-        {"id": id},
-        {"$push": {"tags": tag_id}},
-    )
-    if result.modified_count == 0:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+def attach_tag(composition_id: CompositionId, tag: TagId) -> None:
+    try:
+        CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
+        )
+    try:
+        TagModel.get(tag)
+    except TagModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong tag ID: {tag}")
+    model = CompositionModel.get(composition_id)
+    model.tags.add(tag)
+    model.save()
 
 
 def attach_product(
     composition_id: CompositionId, product_id: ProductId, x: float, y: float
 ) -> None:
-    if products_collection.count_documents({"id": product_id}) == 0:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong product ID")
+    try:
+        model = CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
+        )
+    try:
+        ProductModel.get(product_id)
+    except ProductModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong product ID: {product_id}"
+        )
     point = Point(product_id=product_id, x=x, y=y)
-    result = compositions_collection.update_one(
-        {"id": composition_id},
-        {"$push": {"points": point.model_dump()}},
-    )
-    if result.modified_count == 0:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    model.points.add(point)
+    model.save()
 
 
 def remove_product(composition_id: CompositionId, product_id: ProductId) -> None:
-    if compositions_collection.count_documents({"id": composition_id}) == 0:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
-    result = compositions_collection.update_one(
-        {"id": composition_id},
-        {"$pull": {"points": {"product_id": product_id}}},
-    )
-    if result.modified_count == 0:
+    try:
+        model = CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
         raise HTTPException(
-            status.HTTP_400_BAD_REQUEST, "Product not attached to composition"
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
         )
+    try:
+        ProductModel.get(product_id)
+    except ProductModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong product ID: {product_id}"
+        )
+    model.points = [
+        point for point in model.points if point["product_id"] != product_id
+    ]
+    model.save()
 
 
 def delete_tag(composition_id: CompositionId, tag_id: TagId) -> None:
-    result = compositions_collection.find_one_and_delete({"id": composition_id})
-    if result is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
-    composition = Composition(**result)
-    if tag_id not in composition.tags:
+    try:
+        model = CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
         raise HTTPException(
-            status.HTTP_404_NOT_FOUND, "Tag not attached to composition"
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
         )
-    compositions_collection.update_one(
-        {"id": composition_id},
-        {"$pull": {"tags": tag_id}},
-    )
+    try:
+        TagModel.get(tag_id)
+    except TagModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong tag ID: {tag_id}")
+    model.tags.remove(tag_id)
+    model.save()
 
 
 def delete_composition_by_id(id: CompositionId) -> None:
-    result = compositions_collection.delete_one({"id": id})
-    if result.deleted_count == 0:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    try:
+        model = CompositionModel.get(id)
+    except CompositionModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {id}")
+    model.delete()

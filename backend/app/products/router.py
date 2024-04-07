@@ -14,7 +14,7 @@ from fastapi import (
 from fastapi.responses import FileResponse
 
 from app.products.schemas import Product
-from app.products.service import create_product, delete, get_product, update
+from app.products.service import create_product, delete, get_product, update, get_all
 from app.schemas import JWToken, ProductId
 
 router = APIRouter(prefix="/products", tags=["Products"])
@@ -29,6 +29,16 @@ async def get_product_info(
     id: Annotated[ProductId, Path()],
 ) -> Product:
     return get_product(id)
+
+
+@router.get(
+    "/",
+    description="Get all products info (no JWT verification now)",
+)
+async def get_products_info(
+    token: Annotated[JWToken, Header()],
+) -> list[Product]:
+    return get_all()
 
 
 @router.get(
