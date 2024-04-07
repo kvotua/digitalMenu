@@ -7,7 +7,7 @@ from app.schemas import ProductId
 
 class ProductModel(Model):
     class Meta:
-        table_name = "tags"
+        table_name = "products"
         host = "http://dynamodb:8000"
         region = "dummy"
         aws_access_key_id = "dummy"

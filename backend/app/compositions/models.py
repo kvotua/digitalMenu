@@ -7,7 +7,7 @@ from app.schemas import CompositionId, TagId
 
 class CompositionModel(Model):
     class Meta:
-        table_name = "tags"
+        table_name = "compositions"
         host = "http://dynamodb:8000"
         region = "dummy"
         aws_access_key_id = "dummy"
