@@ -20,25 +20,30 @@ const TagAdd: React.FC = () => {
     onSuccess: () => navigate(-1),
   });
   return (
-    <main className="container pt-5">
-      <h2 className="pb-2 pl-1">Название и цвет раздела</h2>
-      <div className="flex gap-5 items-center">
-        <TextField
-          value={tagInfo.name}
-          setValue={(e) => setTagInfo({ ...tagInfo, name: e.target.value })}
-        />
-        <label htmlFor="color">
-          <input
-            onChange={(e) => setTagInfo({ ...tagInfo, color: e.target.value })}
-            type="color"
-            id="color"
-            className="hidden"
+    <main className="container pt-5 flex flex-col h-screen">
+      <div className="flex-grow">
+        <h2 className="pb-2 pl-1">Название и цвет раздела</h2>
+        <div className="flex gap-5 items-center ">
+          <TextField
+            value={tagInfo.name}
+            setValue={(e) => setTagInfo({ ...tagInfo, name: e.target.value })}
           />
-          <div className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center">
-            <ColorPicker width="30px" fill={tagInfo.color} />
-          </div>
-        </label>
+          <label htmlFor="color">
+            <input
+              onChange={(e) =>
+                setTagInfo({ ...tagInfo, color: e.target.value })
+              }
+              type="color"
+              id="color"
+              className="w-0 h-0 absolute opacity-0"
+            />
+            <div className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center">
+              <ColorPicker width="30px" fill={tagInfo.color} />
+            </div>
+          </label>
+        </div>
       </div>
+
       <BottomPanel doneFunc={mutate} />
     </main>
   );
