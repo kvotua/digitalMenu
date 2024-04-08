@@ -14,7 +14,7 @@ const Home: React.FC = () => {
         .get<string[]>(`/compositions/${tagId && `?tag=$${tagId}`}`)
         .then(({ data }) => data),
   });
-  
+
   return (
     <main className="container flex flex-col h-screen">
       <section className="columns-2 gap-3 flex-grow">
@@ -28,7 +28,7 @@ const Home: React.FC = () => {
           <CardComposotion
             key={item}
             id={item}
-            image={`http://localhost:8000/compositions/${item}/image`}
+            image={`${import.meta.env.VITE_API_URL}/compositions/${item}/image`}
           />
         ))}
       </section>
