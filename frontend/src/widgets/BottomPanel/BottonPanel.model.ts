@@ -1,4 +1,4 @@
 export interface IButtonPanelProps {
-  deleteFunc?: () => void;
-  doneFunc?: () => void;
+  deleteFunc?: (() => void) | undefined;
+  doneFunc?: (() => void) | undefined;
 }

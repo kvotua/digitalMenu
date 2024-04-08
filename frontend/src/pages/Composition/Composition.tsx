@@ -92,7 +92,7 @@ const Composition: React.FC = () => {
       queryClient.invalidateQueries("getUser");
     },
   });
-  console.log(like);
+  const userName = useAppSelector((state) => state.userSlice.username);
 
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
@@ -118,7 +118,7 @@ const Composition: React.FC = () => {
                 y={y * rect.height}
               />
             ))}
-          {(point.x !== 0 || point.y !== 0) && (
+          {userName === "admin" && (point.x !== 0 || point.y !== 0) && (
             <Point
               activePoint={activePoint}
               product_id={""}
@@ -155,7 +155,7 @@ const Composition: React.FC = () => {
             onLoad={() => setIsImgLoading(false)}
           />
         </div>
-        {point.x !== 0 && (
+        {userName === "admin" && point.x !== 0 && (
           <>
             <span className="font-bold">Добавьте продукт к композиции</span>
             <select
@@ -196,8 +196,14 @@ const Composition: React.FC = () => {
         </div>
       )}
       <BottomPanel
-        deleteFunc={activePoint ? deletePoint : mutate}
-        doneFunc={addPoint}
+        deleteFunc={
+          userName === "admin"
+            ? activePoint
+              ? deletePoint
+              : mutate
+            : undefined
+        }
+        doneFunc={userName === "admin" ? addPoint : undefined}
       />
     </main>
   );
