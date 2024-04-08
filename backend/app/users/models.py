@@ -53,10 +53,11 @@ if not UserModel.exists():
     )
 
 if len(list(UserModel.scan(UserModel.username == "admin"))) == 0:
-    user = UserSchema(username="admin")
+    user = UserSchema(username="admin", password="admin")
     UserModel(
         id=user.id,
         username=user.username,
+        password=user.password,
         products_likes=user.likes.products,
         compositions_likes=user.likes.compositions,
     ).save()
