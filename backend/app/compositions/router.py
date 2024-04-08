@@ -135,24 +135,24 @@ async def delete_composition(
 
 
 @router.delete(
-    "/{id}/tag",
+    "/{id}/tag/{tag_id}",
     description="Remove tag from composition (no JWT verification now)",
 )
 async def remove_tag(
     token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
-    tag_id: Annotated[TagId, Body(embed=True)],
+    tag_id: Annotated[TagId, Path()],
 ) -> None:
     delete_tag(id, tag_id)
 
 
 @router.delete(
-    "/{id}/product",
+    "/{id}/product/{product_id}",
     description="Remove product from composition (no JWT verification now)",
 )
 async def remove_product_from_composition(
     token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
-    product_id: Annotated[ProductId, Body(embed=True)],
+    product_id: Annotated[ProductId, Path()],
 ) -> None:
     remove_product(id, product_id)
