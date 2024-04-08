@@ -93,7 +93,7 @@ def attach_product(
             status.HTTP_404_NOT_FOUND, f"Wrong product ID: {product_id}"
         )
     point = Point(product_id=product_id, x=x, y=y)
-    model.points.add(point)
+    model.points.append(point.model_dump())
     model.save()
 
 

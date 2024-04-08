@@ -3,10 +3,10 @@ from typing import Optional
 from fastapi import HTTPException, status
 from pydantic_extra_types.color import Color
 
+from app.compositions.models import CompositionModel
 from app.schemas import TagId
 from app.tags.models import TagModel
 from app.tags.schemas import Tag
-from app.compositions.models import CompositionModel
 
 
 def create_tag(name: str, color: Color) -> TagId:
