@@ -1,3 +1,4 @@
+import bcrypt
 from pynamodb.attributes import UnicodeAttribute, UnicodeSetAttribute
 from pynamodb.models import Model
 
@@ -57,7 +58,7 @@ if len(list(UserModel.scan(UserModel.username == "admin"))) == 0:
     UserModel(
         id=user.id,
         username=user.username,
-        password=user.password,
+        password=bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode(),
         products_likes=user.likes.products,
         compositions_likes=user.likes.compositions,
     ).save()
