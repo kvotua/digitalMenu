@@ -106,9 +106,28 @@ def like(composition_id: CompositionId, user_id: UserId) -> None:
             status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
         )
     user_model = UserModel.get(user_id)
-    user_model.compositions_likes.add(composition_id)
+    if user_model.compositions_likes is None:
+        user_model.compositions_likes = {composition_id}
+    else:
+        user_model.compositions_likes.add(composition_id)
     user_model.save()
     model.likes += 1
+    model.save()
+
+
+def unlike(composition_id: CompositionId, user_id: UserId) -> None:
+    try:
+        model = CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
+        )
+    user_model = UserModel.get(user_id)
+    user_model.compositions_likes = {
+        liked for liked in user_model.compositions_likes if liked != composition_id
+    }
+    user_model.save()
+    model.likes -= 1
     model.save()
 
 

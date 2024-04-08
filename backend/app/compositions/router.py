@@ -26,6 +26,7 @@ from app.compositions.service import (
     get_compositions,
     like,
     remove_product,
+    unlike,
 )
 from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
 from app.utils import jwt_to_id
@@ -116,13 +117,24 @@ async def attach_product_to_composition(
 
 @router.post(
     "/{id}/like",
-    description="Add composition to liked (no JWT verification now)",
+    description="Add composition to liked",
 )
 async def like_composition(
     user_id: Annotated[UserId, Depends(jwt_to_id)],
     id: Annotated[CompositionId, Path()],
 ) -> None:
     like(id, user_id)
+
+
+@router.delete(
+    "/{id}/like",
+    description="Remove composition from liked",
+)
+async def unlike_composition(
+    user_id: Annotated[UserId, Depends(jwt_to_id)],
+    id: Annotated[CompositionId, Path()],
+) -> None:
+    unlike(id, user_id)
 
 
 @router.post(
