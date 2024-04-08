@@ -32,7 +32,7 @@ const Header: React.FC = () => {
                 title={name}
                 id={id}
                 tagId={tagId}
-                setTagId={() => setTagId(id)}
+                setTagId={setTagId}
               />
             </li>
           ))}

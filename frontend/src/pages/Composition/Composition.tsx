@@ -1,18 +1,17 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
 import { useGetProductById } from "src/app/services/useGetProductById";
 import { useGetProduct } from "src/app/services/useGetProducts";
-import { Product } from "src/entities/Product/Product";
 import { Point } from "src/shared/Point/Point";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
+import Heart from "src/app/assets/heart.svg?react";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
-  const isAdmin = true;
-  const { data: composition } = useQuery({
+  const { data: composition, refetch } = useQuery({
     queryKey: "getComposition",
     queryFn: () =>
       apiWithAuth
@@ -21,15 +20,6 @@ const Composition: React.FC = () => {
   });
   const { data: products } = useGetProduct();
   const [activePoint, setActivePoint] = useState<string>("");
-  // const [isImgLoading, setIsImgLoading] = useState(true);
-  // const { data: product } = useGetProductById(activePoint);
-  // const container = useRef<HTMLImageElement>(null);
-  // useEffect(() => {
-  //   const divContainer = container.current;
-  //   if (divContainer && !isImgLoading) {
-  //     const rect = divContainer.getBoundingClientRect();
-  //   }
-  // }, [composition, isImgLoading]);
   const [point, setPoint] = useState({
     x: 0,
     y: 0,
@@ -48,8 +38,6 @@ const Composition: React.FC = () => {
   });
   const img = useRef<HTMLImageElement>(null);
   const [isLoading, setIsImgLoading] = useState(true);
-  const newPoint = useRef(null);
-
   useEffect(() => {
     const current = img.current;
     setPoint;
@@ -76,23 +64,24 @@ const Composition: React.FC = () => {
   });
 
   const { data: currentProduct } = useGetProductById(activePoint);
-  const {} = useMutation({
+  const { mutate: deletePoint } = useMutation({
     mutationKey: "deletePoint",
     mutationFn: () =>
-      apiWithAuth.delete(`/compositions/${id}/product`, {
-        product_id: activePoint,
-      }),
+      apiWithAuth.delete(`/compositions/${id}/product/${activePoint}`),
+    onSuccess: () => refetch(),
   });
+  const [like, setLike] = useState(false);
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
-      <div className=" flex-grow">
+      <div className=" flex-grow ">
         <div
-          className="w-full relative"
+          className="w-full relative border rounded-2xl border-[#ae88f1] p-2"
           id="container"
           onClick={(e) => {
             if (e.currentTarget.id === "container") {
               setPoint({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
             }
+            console.log(e.currentTarget.children);
           }}
         >
           {!isLoading &&
@@ -106,13 +95,23 @@ const Composition: React.FC = () => {
                 y={y * rect.height}
               />
             ))}
-          <Point
-            activePoint={activePoint}
-            product_id={""}
-            x={point.x}
-            y={point.y}
+          {(point.x !== 0 || point.y !== 0) && (
+            <Point
+              activePoint={activePoint}
+              product_id={""}
+              x={point.x}
+              y={point.y}
+            />
+          )}
+          <Heart
+            id="like"
+            fill={like ? "#ff5959" : "#ae88f1"}
+            className="absolute top-5 right-5 w-10 h-10 rounded-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLike(!like);
+            }}
           />
-
           <img
             ref={img}
             src={`${import.meta.env.VITE_API_URL}/compositions/${
