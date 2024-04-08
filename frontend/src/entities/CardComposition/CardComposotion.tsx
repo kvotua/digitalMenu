@@ -8,7 +8,7 @@ const CardComposotion: React.FC<ICardModelProps> = ({ id, image }) => {
       to={`composition/${id}`}
       className={style.container}
     >
-      <img src={image} alt={image} className="w-full" />
+      <img src={image} alt={image} className="w-full rounded-2xl" />
     </Link>
   );
 };

@@ -1,0 +1,3 @@
+.addButton {
+  @apply w-full h-20 flex flex-col gap-5 justify-center items-center text-center rounded-2xl border border-[#ae88f1];
+}/*# sourceMappingURL=Home.module.css.map */

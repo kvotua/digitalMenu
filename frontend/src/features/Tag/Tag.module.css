@@ -1,0 +1,9 @@
+.tags {
+  @apply flex flex-col items-center;
+}
+.tags .innerTags {
+  @apply w-16 h-16 bg-black rounded-full relative;
+}
+.tags .innerText {
+  @apply font-light whitespace-nowrap text-sm;
+}/*# sourceMappingURL=Tag.module.css.map */

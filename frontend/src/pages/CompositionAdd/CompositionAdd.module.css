@@ -1,0 +1,6 @@
+.drop_container {
+  @apply appearance-none bg-white p-5 outline-none border border-[#ae88f1] rounded-2xl relative overflow-visible;
+}
+.drop_container::-ms-expand {
+  display: none;
+}/*# sourceMappingURL=CompositionAdd.module.css.map */

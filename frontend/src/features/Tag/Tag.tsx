@@ -4,7 +4,10 @@ import style from "./Tag.module.scss";
 import { apiWithAuth } from "src/app/Http";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
 import { setFilter } from "src/app/Store/slices/filterSlice";
+import { useAppSelector } from "src/app/hooks/useAppSelector";
 const Tag: React.FC<ITagProps> = ({ color, title, id, tagId, setTagId }) => {
+  const userName = useAppSelector((state) => state.userSlice.username);
+
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
   const { mutate: deleteTag } = useMutation({
@@ -24,14 +27,17 @@ const Tag: React.FC<ITagProps> = ({ color, title, id, tagId, setTagId }) => {
           background: tagId === id ? "url(/smile.svg)" : color,
         }}
       >
-        {tagId === id && tagId !== "0" && tagId !== "-1" && (
-          <img
-            src="/trash.svg"
-            alt="trash"
-            className="absolute w-6 -top-0 -right-0"
-            onClick={() => deleteTag()}
-          />
-        )}
+        {userName === "admin" &&
+          tagId === id &&
+          tagId !== "0" &&
+          tagId !== "-1" && (
+            <img
+              src="/trash.svg"
+              alt="trash"
+              className="absolute w-6 -top-0 -right-0"
+              onClick={() => deleteTag()}
+            />
+          )}
       </div>
       <span className={style.innerText}>
         {title.length > 6 ? title.slice(0, 6) + "..." : title}

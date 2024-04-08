@@ -50,7 +50,7 @@ const Auth: React.FC = () => {
               required: "Логин",
             })}
             className="border-none py-2"
-            placeholder="Электронная почта"
+            placeholder="Логин"
           />
           <hr
             className={`border-[#ae88f1] mx-3 ${
