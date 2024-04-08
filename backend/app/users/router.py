@@ -36,8 +36,8 @@ async def assign_user(
     user_id: Annotated[UserId, Depends(jwt_to_id)],
     username: Annotated[str, Body(min_length=1)],
     password: Annotated[str, Body(min_length=1)],
-) -> None:
-    assign(user_id, username, password)
+) -> JWToken:
+    return assign(user_id, username, password)
 
 
 @router.post(
