@@ -4,6 +4,7 @@ from typing import Annotated, Optional
 from fastapi import (
     APIRouter,
     Body,
+    Depends,
     Form,
     Header,
     HTTPException,
@@ -16,13 +17,14 @@ from fastapi.responses import FileResponse
 from app.products.schemas import Product
 from app.products.service import create_product, delete, get_all, get_product, update
 from app.schemas import JWToken, ProductId
+from app.utils import check_admin
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
 @router.get(
     "/",
-    description="Get all products info (no JWT verification now)",
+    description="Get all products info",
 )
 async def get_products_info(
     token: Annotated[JWToken, Header()],
@@ -32,7 +34,7 @@ async def get_products_info(
 
 @router.get(
     "/{id}",
-    description="Get product info (no JWT verification now)",
+    description="Get product info",
 )
 async def get_product_info(
     token: Annotated[JWToken, Header()],
@@ -60,10 +62,10 @@ async def get_image(
 
 @router.post(
     "/",
-    description="Create new product (no JWT, file type and file size verification now)",
+    description="Create new product (no file type and file size verification now)",
+    dependencies=[Depends(check_admin)],
 )
 async def post_product(
-    token: Annotated[JWToken, Header()],
     image: UploadFile,
     name: Annotated[str, Form(min_length=1)],
     description: Annotated[str, Form(min_length=1)],
@@ -77,10 +79,10 @@ async def post_product(
 
 @router.patch(
     "/{id}",
-    description="Update product info (no JWT verification now)",
+    description="Update product info",
+    dependencies=[Depends(check_admin)],
 )
 async def update_product_info(
-    token: Annotated[JWToken, Header()],
     id: Annotated[ProductId, Path()],
     name: Optional[Annotated[str, Body(min_length=1)]],
     description: Optional[Annotated[str, Body()]],
@@ -91,10 +93,10 @@ async def update_product_info(
 
 @router.delete(
     "/{id}",
-    description="Also removes it from all compositions (no JWT verification now)",
+    description="Also removes it from all compositions",
+    dependencies=[Depends(check_admin)],
 )
 async def delete_product(
-    token: Annotated[JWToken, Header()],
     id: Annotated[ProductId, Path()],
 ) -> None:
     delete(id)

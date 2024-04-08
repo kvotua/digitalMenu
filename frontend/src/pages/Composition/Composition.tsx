@@ -1,87 +1,210 @@
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
 import { useGetProductById } from "src/app/services/useGetProductById";
-import { Product } from "src/entities/Product/Product";
+import { useGetProduct } from "src/app/services/useGetProducts";
+import { Point } from "src/shared/Point/Point";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
+import Heart from "src/app/assets/heart.svg?react";
+import { useAppSelector } from "src/app/hooks/useAppSelector";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
-  const { data: composition } = useQuery({
+  const { data: composition, refetch } = useQuery({
     queryKey: "getComposition",
     queryFn: () =>
       apiWithAuth
         .get<IComposition>(`/compositions/${id}`)
         .then(({ data }) => data),
   });
-  const [activePoint, setActivePoint] = useState<null | string>(null);
-  const [rect, setRect] = useState<DOMRect>();
-  const [isImgLoading, setIsImgLoading] = useState(true);
-  const { data: product } = useGetProductById(activePoint);
-  const container = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const divContainer = container.current;
-    if (divContainer && !isImgLoading) {
-      const rect = divContainer.getBoundingClientRect();
-      console.log(rect);
+  const { data: products } = useGetProduct();
+  const [activePoint, setActivePoint] = useState<string>("");
+  const [point, setPoint] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [product, setProduct] = useState("");
+  const navigate = useNavigate();
+  const { mutate } = useMutation({
+    mutationKey: "deleteComp",
 
-      setRect(rect);
+    mutationFn: () => apiWithAuth.delete(`compositions/${id}`),
+    onSuccess: () => navigate(-1),
+  });
+  const [rect, setRect] = useState({
+    width: 0,
+    height: 0,
+  });
+  const img = useRef<HTMLImageElement>(null);
+  const [isLoading, setIsImgLoading] = useState(true);
+  const likes = useAppSelector((state) => state.userSlice.likes);
+  const [like, setLike] = useState(false);
+  useEffect(() => {
+    const current = img.current;
+    setPoint;
+    if (current) {
+      setRect({
+        width: current.clientWidth,
+        height: current.clientHeight,
+      });
     }
-  }, [composition, isImgLoading]);
-  console.log(product);
+    setLike(likes.compositions.includes(id!));
+  }, [isLoading, likes]);
+  const { mutate: addPoint } = useMutation({
+    mutationKey: "addPoint",
+    mutationFn: () => {
+      if (img.current) {
+        return apiWithAuth.post(`/compositions/${id}/product`, {
+          product_id: product,
+          x: point.x / img.current?.clientWidth,
+          y: point.y / img.current?.clientHeight,
+        });
+      }
+      return Promise.resolve(null);
+    },
+    onSuccess: () => navigate(-1),
+  });
+
+  const { data: currentProduct } = useGetProductById(activePoint);
+  const { mutate: deletePoint } = useMutation({
+    mutationKey: "deletePoint",
+    mutationFn: () =>
+      apiWithAuth.delete(`/compositions/${id}/product/${activePoint}`),
+    onSuccess: () => refetch(),
+  });
+
+  const queryClient = useQueryClient();
+  const { mutate: addLike } = useMutation({
+    mutationKey: "addLike",
+    mutationFn: () => apiWithAuth.post(`/compositions/${id}/like`),
+    onSuccess: () => {
+      queryClient.invalidateQueries("getComposition");
+      queryClient.invalidateQueries("getUser");
+    },
+  });
+  const { mutate: deleteLike } = useMutation({
+    mutationKey: "deleteLike",
+    mutationFn: () => apiWithAuth.delete(`/compositions/${id}/like`),
+    onSuccess: () => {
+      queryClient.invalidateQueries("getComposition");
+      queryClient.invalidateQueries("getUser");
+    },
+  });
+  const userName = useAppSelector((state) => state.userSlice.username);
 
   return (
-    <main className="container pt-5">
-      <div className="w-full relative">
-        {composition &&
-          composition?.points?.map(({ product_id, x, y }) => (
-            <div
-              onClick={() => setActivePoint(product_id)}
-              id={product_id}
-              key={product_id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full z-50 flex justify-center items-center"
-              style={{
-                top: !isImgLoading && rect ? y * rect?.height : 0,
-                left: !isImgLoading && rect ? x * rect?.width : 0,
+    <main className="container pt-5 flex flex-col min-h-screen">
+      <div className=" flex-grow ">
+        <div
+          className="w-full relative border rounded-2xl border-[#ae88f1] p-2"
+          id="container"
+          onClick={(e) => {
+            if (e.currentTarget.id === "container") {
+              setPoint({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+            }
+            console.log(e.currentTarget.children);
+          }}
+        >
+          {!isLoading &&
+            composition?.points.map(({ x, y, product_id }) => (
+              <Point
+                setActivePoint={() => setActivePoint(product_id)}
+                product_id={product_id}
+                activePoint={activePoint}
+                x={x * rect.width}
+                key={product_id}
+                y={y * rect.height}
+              />
+            ))}
+          {userName === "admin" && (point.x !== 0 || point.y !== 0) && (
+            <Point
+              activePoint={activePoint}
+              product_id={""}
+              x={point.x}
+              y={point.y}
+            />
+          )}
+          <div className="flex items-center justify-center absolute bottom-5 right-5  bg-white rounded-full border border-[#ae88f1] px-2">
+            <span className="text-3xl">{composition?.likes}</span>
+            <Heart
+              id="like"
+              fill={like ? "red" : "none"}
+              stroke={like ? "none" : "black"}
+              strokeWidth={2}
+              className={`w-10 h-10  flex justify-center items-center p-1`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!like) {
+                  addLike();
+                } else {
+                  deleteLike();
+                }
+                setLike(!like);
               }}
+            />
+          </div>
+          <img
+            ref={img}
+            src={`${import.meta.env.VITE_API_URL}/compositions/${
+              composition?.id
+            }/image`}
+            alt="image"
+            className="rounded-2xl w-full"
+            onLoad={() => setIsImgLoading(false)}
+          />
+        </div>
+        {userName === "admin" && point.x !== 0 && (
+          <>
+            <span className="font-bold">Добавьте продукт к композиции</span>
+            <select
+              onChange={(e) => setProduct(e.target.value)}
+              className={`appearance-none bg-white p-5 outline-none border border-[#ae88f1] rounded-2xl relative overflow-visible w-full mt-5`}
             >
-              <div
-                className={`w-1/2 h-1/2 bg-white rounded-full ${
-                  product_id === activePoint ? "bg-green-500" : ""
-                }`}
-              ></div>
-            </div>
-          ))}
-        <img
-          ref={container}
-          src={`${import.meta.env.VITE_API_URL}/compositions/${
-            composition?.id
-          }/image`}
-          alt="image"
-          className="rounded-2xl w-full"
-          onLoad={() => setIsImgLoading(false)}
-        />
+              <option value="0">Выберите продукт</option>
+              {products
+                ?.filter((product) => {
+                  const bools = composition?.points.map(
+                    ({ product_id }) => product.id === product_id
+                  );
+                  return !bools?.includes(true);
+                })
+                .map(({ id, name }) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ))}
+            </select>
+          </>
+        )}
       </div>
-      {product && (
+      {currentProduct && (
         <div className="grid grid-cols-2 pt-5 gap-5 pb-20">
           <img
             src={`${import.meta.env.VITE_API_URL}/products/${
-              product?.id
+              currentProduct?.id
             }/image`}
             alt=""
           />
           <div className="flex flex-col text-2xl font-bold">
-            <span>{product?.name}</span>
-            <span>{product?.price} p.</span>
+            <span>{currentProduct?.name}</span>
+            <span>{currentProduct?.price} p.</span>
           </div>
 
-          <p className="col-span-2">{product?.description}</p>
+          <p className="col-span-2">{currentProduct?.description}</p>
         </div>
       )}
-      <Product />
-      <BottomPanel />
+      <BottomPanel
+        deleteFunc={
+          userName === "admin"
+            ? activePoint
+              ? deletePoint
+              : mutate
+            : undefined
+        }
+        doneFunc={userName === "admin" ? addPoint : undefined}
+      />
     </main>
   );
 };

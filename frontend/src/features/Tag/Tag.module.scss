@@ -2,7 +2,7 @@
     @apply flex flex-col items-center; 
 
     .innerTags{
-        @apply w-16 h-16 bg-black rounded-full;
+        @apply w-16 h-16 bg-black rounded-full relative;
     }
     .innerText {
         @apply font-light whitespace-nowrap text-sm;

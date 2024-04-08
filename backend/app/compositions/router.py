@@ -29,14 +29,14 @@ from app.compositions.service import (
     unlike,
 )
 from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
-from app.utils import jwt_to_id
+from app.utils import check_admin, jwt_to_id
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])
 
 
 @router.get(
     "/{id}",
-    description="Get composition info (no JWT verification now)",
+    description="Get composition info",
 )
 async def get_composition_info(
     token: Annotated[JWToken, Header()],
@@ -75,10 +75,10 @@ async def get_all_compositions(
 
 @router.post(
     "/",
-    description="New composition (no JWT, file type and file size verification now)",
+    description="New composition",
+    dependencies=[Depends(check_admin)],
 )
 async def post_composition(
-    token: Annotated[JWToken, Header()],
     points: Annotated[Optional[list[Point]], Body()] = None,
     tags: Annotated[Optional[list[TagId]], Body()] = None,
 ) -> CompositionId:
@@ -88,7 +88,8 @@ async def post_composition(
 
 @router.post(
     "/{id}/image",
-    description="Add image to composition (no JWT, file type/size verification now)",
+    description="Add image to composition (no file type and size verification now)",
+    dependencies=[Depends(check_admin)],
 )
 async def post_composition_image(
     token: Annotated[JWToken, Header()],
@@ -103,10 +104,10 @@ async def post_composition_image(
 
 @router.post(
     "/{id}/product",
-    description="Attach product to composition (no JWT verification now)",
+    description="Attach product to composition",
+    dependencies=[Depends(check_admin)],
 )
 async def attach_product_to_composition(
-    token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
     product_id: Annotated[ProductId, Body()],
     x: Annotated[float, Body(ge=0, le=1)],
@@ -139,10 +140,10 @@ async def unlike_composition(
 
 @router.post(
     "/{id}/tag",
-    description="Attach tag to composition (no JWT verification now)",
+    description="Attach tag to composition",
+    dependencies=[Depends(check_admin)],
 )
 async def post_tag(
-    token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
     tag_id: Annotated[TagId, Body(embed=True)],
 ) -> None:
@@ -151,10 +152,10 @@ async def post_tag(
 
 @router.delete(
     "/{id}",
-    description="Delete composition (no JWT verification now)",
+    description="Delete composition",
+    dependencies=[Depends(check_admin)],
 )
 async def delete_composition(
-    token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
 ) -> None:
     delete_composition_by_id(id)
@@ -162,10 +163,10 @@ async def delete_composition(
 
 @router.delete(
     "/{id}/tag/{tag_id}",
-    description="Remove tag from composition (no JWT verification now)",
+    description="Remove tag from composition",
+    dependencies=[Depends(check_admin)],
 )
 async def remove_tag(
-    token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
     tag_id: Annotated[TagId, Path()],
 ) -> None:
@@ -174,10 +175,10 @@ async def remove_tag(
 
 @router.delete(
     "/{id}/product/{product_id}",
-    description="Remove product from composition (no JWT verification now)",
+    description="Remove product from composition",
+    dependencies=[Depends(check_admin)],
 )
 async def remove_product_from_composition(
-    token: Annotated[JWToken, Header()],
     id: Annotated[CompositionId, Path()],
     product_id: Annotated[ProductId, Path()],
 ) -> None:
