@@ -5,8 +5,9 @@ from fastapi import HTTPException, status
 from app.compositions.models import CompositionModel
 from app.compositions.schemas import Composition, Point
 from app.products.models import ProductModel
-from app.schemas import CompositionId, ProductId, TagId
+from app.schemas import CompositionId, ProductId, TagId, UserId
 from app.tags.models import TagModel
+from app.users.models import UserModel
 
 
 def create_composition(
@@ -94,6 +95,20 @@ def attach_product(
         )
     point = Point(product_id=product_id, x=x, y=y)
     model.points.append(point.model_dump())
+    model.save()
+
+
+def like(composition_id: CompositionId, user_id: UserId) -> None:
+    try:
+        model = CompositionModel.get(composition_id)
+    except CompositionModel.DoesNotExist:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Wrong composition ID: {composition_id}"
+        )
+    user_model = UserModel.get(user_id)
+    user_model.compositions_likes.add(composition_id)
+    user_model.save()
+    model.likes += 1
     model.save()
 
 

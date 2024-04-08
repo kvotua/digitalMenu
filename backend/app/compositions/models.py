@@ -1,4 +1,9 @@
-from pynamodb.attributes import JSONAttribute, UnicodeAttribute, UnicodeSetAttribute
+from pynamodb.attributes import (
+    JSONAttribute,
+    NumberAttribute,
+    UnicodeAttribute,
+    UnicodeSetAttribute,
+)
 from pynamodb.models import Model
 
 from app.compositions.schemas import Composition, Point
@@ -16,6 +21,7 @@ class CompositionModel(Model):
     id = UnicodeAttribute(hash_key=True)
     tags = UnicodeSetAttribute()
     points = JSONAttribute()
+    likes = NumberAttribute()
 
     def to_schema(self) -> Composition:
         return Composition(
@@ -30,6 +36,7 @@ class CompositionModel(Model):
                 if self.points is not None
                 else []
             ),
+            likes=int(self.likes),
         )
 
 

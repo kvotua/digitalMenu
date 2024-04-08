@@ -4,6 +4,7 @@ from typing import Annotated, Optional
 from fastapi import (
     APIRouter,
     Body,
+    Depends,
     Header,
     HTTPException,
     Path,
@@ -23,9 +24,11 @@ from app.compositions.service import (
     exist,
     get_composition,
     get_compositions,
+    like,
     remove_product,
 )
-from app.schemas import CompositionId, JWToken, ProductId, TagId
+from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
+from app.utils import jwt_to_id
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])
 
@@ -109,6 +112,17 @@ async def attach_product_to_composition(
     y: Annotated[float, Body(ge=0, le=1)],
 ) -> None:
     attach_product(id, product_id, x, y)
+
+
+@router.post(
+    "/{id}/like",
+    description="Add composition to liked (no JWT verification now)",
+)
+async def like_composition(
+    user_id: Annotated[UserId, Depends(jwt_to_id)],
+    id: Annotated[CompositionId, Path()],
+) -> None:
+    like(id, user_id)
 
 
 @router.post(

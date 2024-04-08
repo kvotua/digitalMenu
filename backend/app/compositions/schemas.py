@@ -15,3 +15,4 @@ class Composition(BaseModel):
     id: CompositionId = Field(default_factory=lambda: CompositionId(str(uuid.uuid4())))
     tags: list[TagId] = []
     points: list[Point] = []
+    likes: int = Field(ge=0, default=0)
