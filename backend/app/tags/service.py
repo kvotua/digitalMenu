@@ -6,6 +6,7 @@ from pydantic_extra_types.color import Color
 from app.schemas import TagId
 from app.tags.models import TagModel
 from app.tags.schemas import Tag
+from app.compositions.models import CompositionModel
 
 
 def create_tag(name: str, color: Color) -> TagId:
@@ -23,8 +24,11 @@ def delete(id: TagId) -> None:
         model = TagModel.get(id)
     except TagModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
+    for composition in CompositionModel.scan(
+        filter_condition=CompositionModel.tags.contains(id)
+    ):
+        composition.update(actions=[CompositionModel.tags.delete({id})])
     model.delete()
-    # TODO: delete tag from all compositions
 
 
 def update(id: TagId, name: Optional[str], color: Optional[Color]) -> None:
