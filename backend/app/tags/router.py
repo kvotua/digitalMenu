@@ -14,7 +14,6 @@ router = APIRouter(prefix="/tags", tags=["Tags"])
 @router.get(
     "/",
     description="Get all tags",
-    dependencies=[Depends(check_admin)],
 )
 async def get_all_tags() -> list[Tag]:
     return get_all()
