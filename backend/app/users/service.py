@@ -1,3 +1,4 @@
+import bcrypt
 from fastapi import HTTPException, status
 
 from app.schemas import JWToken, UserId
@@ -5,7 +6,6 @@ from app.users.models import UserModel as UserModel
 
 from .schemas import User
 from .utils import id_to_jwt
-import bcrypt
 
 
 def create_user() -> JWToken:
@@ -44,3 +44,12 @@ def login(username: str, password: str) -> JWToken:
     if not bcrypt.checkpw(password.encode(), user.password.encode()):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Wrong password")
     return id_to_jwt(user.id)
+
+
+def update_password(user_id: UserId, password: str) -> None:
+    try:
+        model = UserModel.get(user_id)
+    except UserModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong user ID")
+    model.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    model.save()
