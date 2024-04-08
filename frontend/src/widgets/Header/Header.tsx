@@ -16,13 +16,23 @@ const Header: React.FC = () => {
       <header className={`${style.header}`}>
         <ul className={style.container}>
           <Tag
-            color={"red"}
-            title={"все"}
+            color={"#88b874"}
+            title={"Все"}
             id={"0"}
             tagId={tagId}
             setTagId={() => {
               dispatch(setFilter(""));
               setTagId("0");
+            }}
+          />
+          <Tag
+            color={"pink"}
+            title={"Лайки"}
+            id={"-1"}
+            tagId={tagId}
+            setTagId={() => {
+              dispatch(setFilter("likes"));
+              setTagId("-1");
             }}
           />
           {tags?.map(({ color, name, id }) => (

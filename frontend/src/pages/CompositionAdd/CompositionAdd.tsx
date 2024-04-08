@@ -12,7 +12,8 @@ const CompositionAdd: React.FC = () => {
     formData.append("image", img);
   }
   const { data: tags } = useGetTags();
-  const [tag, setTeg] = useState("");
+  const [tag, setTeg] = useState<string[]>([]);
+  console.log(tag);
 
   const navigate = useNavigate();
 
@@ -20,7 +21,7 @@ const CompositionAdd: React.FC = () => {
     mutationKey: "postComposition",
     mutationFn: async () =>
       apiWithAuth.post("/compositions/", {
-        tags: tag ? [tag] : [],
+        tags: tag,
       }),
     onSuccess: ({ data }) => {
       apiWithAuth
@@ -60,7 +61,12 @@ const CompositionAdd: React.FC = () => {
       <div className="appearance-none pt-5 pb-20 flex flex-col gap-5 ">
         <span className="font-bold">Добавьте категорию к композиции</span>
         <select
-          onChange={(e) => setTeg(e.target.value)}
+          multiple
+          onChange={(e) => {
+            setTeg(
+              Array.from(e.target.selectedOptions).map((option) => option.value)
+            );
+          }}
           className={`${style.drop_container}`}
         >
           <option value="0">Выберите категорию</option>

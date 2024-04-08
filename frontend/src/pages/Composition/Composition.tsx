@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
@@ -8,6 +8,7 @@ import { useGetProduct } from "src/app/services/useGetProducts";
 import { Point } from "src/shared/Point/Point";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 import Heart from "src/app/assets/heart.svg?react";
+import { useAppSelector } from "src/app/hooks/useAppSelector";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
@@ -38,6 +39,8 @@ const Composition: React.FC = () => {
   });
   const img = useRef<HTMLImageElement>(null);
   const [isLoading, setIsImgLoading] = useState(true);
+  const likes = useAppSelector((state) => state.userSlice.likes);
+  const [like, setLike] = useState(false);
   useEffect(() => {
     const current = img.current;
     setPoint;
@@ -47,7 +50,8 @@ const Composition: React.FC = () => {
         height: current.clientHeight,
       });
     }
-  }, [isLoading]);
+    setLike(likes.compositions.includes(id!));
+  }, [isLoading, likes]);
   const { mutate: addPoint } = useMutation({
     mutationKey: "addPoint",
     mutationFn: () => {
@@ -70,7 +74,26 @@ const Composition: React.FC = () => {
       apiWithAuth.delete(`/compositions/${id}/product/${activePoint}`),
     onSuccess: () => refetch(),
   });
-  const [like, setLike] = useState(false);
+
+  const queryClient = useQueryClient();
+  const { mutate: addLike } = useMutation({
+    mutationKey: "addLike",
+    mutationFn: () => apiWithAuth.post(`/compositions/${id}/like`),
+    onSuccess: () => {
+      queryClient.invalidateQueries("getComposition");
+      queryClient.invalidateQueries("getUser");
+    },
+  });
+  const { mutate: deleteLike } = useMutation({
+    mutationKey: "deleteLike",
+    mutationFn: () => apiWithAuth.delete(`/compositions/${id}/like`),
+    onSuccess: () => {
+      queryClient.invalidateQueries("getComposition");
+      queryClient.invalidateQueries("getUser");
+    },
+  });
+  console.log(like);
+
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
@@ -103,15 +126,25 @@ const Composition: React.FC = () => {
               y={point.y}
             />
           )}
-          <Heart
-            id="like"
-            fill={like ? "#ff5959" : "#ae88f1"}
-            className="absolute top-5 right-5 w-10 h-10 rounded-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLike(!like);
-            }}
-          />
+          <div className="flex items-center justify-center absolute bottom-5 right-5  bg-white rounded-full border border-[#ae88f1] px-2">
+            <span className="text-3xl">{composition?.likes}</span>
+            <Heart
+              id="like"
+              fill={like ? "red" : "none"}
+              stroke={like ? "none" : "black"}
+              strokeWidth={2}
+              className={`w-10 h-10  flex justify-center items-center p-1`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!like) {
+                  addLike();
+                } else {
+                  deleteLike();
+                }
+                setLike(!like);
+              }}
+            />
+          </div>
           <img
             ref={img}
             src={`${import.meta.env.VITE_API_URL}/compositions/${

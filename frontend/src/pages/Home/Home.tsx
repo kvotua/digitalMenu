@@ -5,15 +5,21 @@ import style from "./Home.module.scss";
 import { Link } from "react-router-dom";
 import { Masonry } from "@mui/lab";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
+import { BottomUserPanel } from "src/widgets/BottomUserPanel/BottomUserPanel";
 
 const Home: React.FC = () => {
   const tagId = useAppSelector((state) => state.filterSlice.id);
+  const likes = useAppSelector((state) => state.userSlice.likes.compositions);
   const { data: compositions = [] } = useQuery({
     queryKey: ["getCompositions", tagId],
-    queryFn: async () =>
-      apiWithAuth
-        .get<string[]>(`/compositions/${tagId && `?tag=${tagId}`}`)
-        .then(({ data }) => data),
+    queryFn: async () => {
+      if (tagId !== "likes") {
+        return apiWithAuth
+          .get<string[]>(`/compositions/${tagId && `?tag=${tagId}`}`)
+          .then(({ data }) => data);
+      }
+      return Promise.resolve(likes);
+    },
   });
 
   return (
@@ -26,7 +32,7 @@ const Home: React.FC = () => {
           Добавить продукт
         </Link>
       </div>
-      <Masonry className="!m-0" columns={2} spacing={2}>
+      <Masonry className="!m-0 flex-grow" columns={2} spacing={2}>
         {compositions?.map((item: string) => (
           <CardComposotion
             key={item}
@@ -34,8 +40,8 @@ const Home: React.FC = () => {
             image={`http://localhost:8000/compositions/${item}/image`}
           />
         ))}
-        {/* <BottomUserPanel /> */}
       </Masonry>
+      <BottomUserPanel />
     </main>
   );
 };

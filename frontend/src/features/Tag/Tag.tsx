@@ -24,7 +24,7 @@ const Tag: React.FC<ITagProps> = ({ color, title, id, tagId, setTagId }) => {
           background: tagId === id ? "url(/smile.svg)" : color,
         }}
       >
-        {tagId === id && tagId !== "0" && (
+        {tagId === id && tagId !== "0" && tagId !== "-1" && (
           <img
             src="/trash.svg"
             alt="trash"
