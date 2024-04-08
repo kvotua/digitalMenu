@@ -2,6 +2,8 @@ from typing import Optional
 
 from fastapi import HTTPException, status
 
+from app.compositions.models import CompositionModel
+from app.compositions.schemas import Point
 from app.products.models import ProductModel
 from app.products.schemas import Product
 from app.schemas import ProductId
@@ -11,10 +13,6 @@ def create_product(name: str, description: str, price: int) -> ProductId:
     product = Product(name=name, description=description, price=price)
     ProductModel(**product.model_dump()).save()
     return product.id
-
-
-def get_all() -> list[Product]:
-    return [Product(**product) for product in products_collection.find({})]
 
 
 def get_product(id: ProductId) -> Product:
@@ -30,8 +28,12 @@ def delete(id: ProductId) -> None:
         model = ProductModel.get(id)
     except ProductModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
+    for composition in CompositionModel.scan():
+        points: list[Point] = [Point(**point) for point in composition.points]
+        points = [point for point in points if point.product_id != id]
+        composition.points = [point.model_dump() for point in points]
+        composition.save()
     model.delete()
-    # TODO: remove from all compositions
 
 
 def get_all() -> list[Product]:
