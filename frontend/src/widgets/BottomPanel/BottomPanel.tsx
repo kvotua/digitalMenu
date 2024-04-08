@@ -1,24 +1,36 @@
 import { useNavigate } from "react-router-dom";
 import style from "./BottomPanel.module.scss";
 import { IButtonPanelProps } from "./BottonPanel.model";
+import { BounceLoader } from "react-spinners";
 
-const BottomPanel: React.FC<IButtonPanelProps> = ({ deleteFunc, doneFunc }) => {
+const BottomPanel: React.FC<IButtonPanelProps> = ({
+  deleteFunc,
+  doneFunc,
+  disabled,
+}) => {
   const navigate = useNavigate();
-  return (
+    return (
     <div className={`${style.panel__container} py-5`}>
       <img
         src="/arrowBack.svg"
         onClick={() => navigate(-1)}
         className=" w-6 justify-items-start"
       />
-      {doneFunc && (
-        <img
-          src="/done.svg"
-          onClick={doneFunc}
-          className="w-6 justify-self-end"
-        />
-      )}
-      {deleteFunc && (
+      {doneFunc &&
+        (disabled ? (
+          <BounceLoader
+            className="justify-self-end"
+            size={30}
+            color="#ae88f1"
+          />
+        ) : (
+          <img
+            src="/done.svg"
+            onClick={doneFunc}
+            className="w-6 justify-self-end"
+          />
+        ))}
+      {deleteFunc && !disabled && (
         <img
           src="/trash.svg"
           onClick={deleteFunc}

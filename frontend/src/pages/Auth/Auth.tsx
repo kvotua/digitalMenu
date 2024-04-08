@@ -17,7 +17,11 @@ const Auth: React.FC = () => {
   } = useForm<FormValues>();
   const onSubmit = (data: FormValues) => {
     if (isReg) {
-      apiWithAuth.post("/users/assign", data).then(() => setIsReg(false));
+      apiWithAuth.post("/users/assign", data).then(() => {
+        setCookie("userToken", data, { maxAge: 1000 * 60 * 60 * 24 * 30 });
+        setIsReg(false);
+        navigate("/");
+      });
     } else {
       apiWithAuth.post("/users/login", data).then(({ data }) => {
         setCookie("userToken", data, { maxAge: 1000 * 60 * 60 * 24 * 30 });

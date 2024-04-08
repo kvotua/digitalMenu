@@ -22,7 +22,7 @@ const ProductAdd: React.FC = () => {
   formData.append("description", productInfo.description);
   formData.append("price", productInfo.price);
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationKey: "postProduct",
     mutationFn: async () =>
       apiWithAuth.post("/products/", formData).then(() => navigate(-1)),
@@ -73,7 +73,7 @@ const ProductAdd: React.FC = () => {
           big
         />
       </div>
-      <BottomPanel doneFunc={mutate} />
+      <BottomPanel doneFunc={mutate} disabled={isLoading} />
     </main>
   );
 };

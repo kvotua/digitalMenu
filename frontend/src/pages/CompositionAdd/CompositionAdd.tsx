@@ -17,16 +17,17 @@ const CompositionAdd: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationKey: "postComposition",
-    mutationFn: async () =>
-      apiWithAuth.post("/compositions/", {
+    mutationFn: async () => {
+      const response = await apiWithAuth.post("/compositions/", {
         tags: tag,
-      }),
-    onSuccess: ({ data }) => {
-      apiWithAuth
-        .post(`/compositions/${data}/image`, formData)
-        .then(() => navigate(-1));
+      });
+      if (response.status === 200) {
+        return apiWithAuth
+          .post(`/compositions/${response.data}/image`, formData)
+          .then(() => navigate(-1));
+      }
     },
   });
 
@@ -77,7 +78,7 @@ const CompositionAdd: React.FC = () => {
           ))}
         </select>
       </div>
-      <BottomPanel doneFunc={mutate} />
+      <BottomPanel doneFunc={mutate} disabled={isLoading} />
     </main>
   );
 };

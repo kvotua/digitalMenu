@@ -1,4 +1,5 @@
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router";
 import { setUser } from "src/app/Store/slices/userSlice";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
 
@@ -7,6 +8,7 @@ const Profile: React.FC = () => {
   const [token, setCookie] = useCookies(["userToken"]);
   console.log(token);
 
+  const navigate = useNavigate();
   return (
     <main className="container pt-5">
       <button
@@ -20,6 +22,7 @@ const Profile: React.FC = () => {
             })
           );
           setCookie("userToken", "", { maxAge: 1000 * 60 * 60 * 24 * 30 });
+          navigate("/");
         }}
       >
         Выйти
