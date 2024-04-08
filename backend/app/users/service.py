@@ -34,6 +34,7 @@ def assign(user_id: UserId, username: str, password: str):
     model.username = username
     model.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     model.save()
+    return id_to_jwt(user_id)
 
 
 def login(username: str, password: str) -> JWToken:
