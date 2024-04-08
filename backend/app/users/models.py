@@ -16,6 +16,7 @@ class UserModel(Model):
 
     id = UnicodeAttribute(hash_key=True)
     username = UnicodeAttribute()
+    password = UnicodeAttribute()
     products_likes = UnicodeSetAttribute()
     compositions_likes = UnicodeSetAttribute()
 
@@ -23,6 +24,7 @@ class UserModel(Model):
         return UserSchema(
             id=UserId(self.id),
             username=self.username,
+            password=self.password,
             likes=UserLikes(
                 products=(
                     list(
@@ -49,3 +51,12 @@ if not UserModel.exists():
         write_capacity_units=1,
         billing_mode="PAY_PER_REQUEST",
     )
+
+if len(list(UserModel.scan(UserModel.username == "admin"))) == 0:
+    user = UserSchema(username="admin")
+    UserModel(
+        id=user.id,
+        username=user.username,
+        products_likes=user.likes.products,
+        compositions_likes=user.likes.compositions,
+    ).save()
