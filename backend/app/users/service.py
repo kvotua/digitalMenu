@@ -29,7 +29,7 @@ def assign(user_id: UserId, username: str, password: str):
         model = UserModel.get(user_id)
     except UserModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong user ID")
-    if len(model.username) != 0:
+    if model.username is not None:
         raise HTTPException(status.HTTP_409_CONFLICT, "Account already assigned")
     if len(list(UserModel.scan(UserModel.username == username))) != 0:
         raise HTTPException(status.HTTP_409_CONFLICT, "Username already taken")
