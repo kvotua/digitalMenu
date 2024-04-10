@@ -19,10 +19,11 @@ const ProfileSettings: React.FC = () => {
       surname: user.surname ? user.surname : "",
     },
   });
+  const isEmail =
+    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   const { mutate } = UserService.updataUser();
   const onSubmit = (data: Omit<IUser, "id" | "likes" | "username">) => {
-    // mutate(data);
-    console.log(data);
+    mutate(data);
   };
   const handleFormSubmission = () => {
     handleSubmit((data) => onSubmit(data))();
@@ -30,14 +31,28 @@ const ProfileSettings: React.FC = () => {
   return (
     <div className="flex flex-col h-[100dvh]">
       <form
-        className="container flex-grow py-5"
+        className="container flex-grow py-5 flex flex-col gap-5"
         onSubmit={handleFormSubmission}
       >
-        <TextField {...register("email", { required: true })} />
-        <TextField {...register("", { required: true })} />
-        <TextField {...register("email", { required: true })} />
-        <TextField {...register("email", { required: true })} />
-
+        <TextField
+          {...register("email", {
+            required: true,
+            pattern: isEmail,
+          })}
+          placeholder="Електронная почта"
+        />
+        <TextField
+          {...register("name", { required: true })}
+          placeholder="Имя"
+        />
+        <TextField
+          {...register("surname", { required: true })}
+          placeholder="Фамилия"
+        />
+        <TextField
+          {...register("phone", { required: true })}
+          placeholder="Телефон"
+        />
       </form>
       <BottomPanel doneFunc={isDirty ? handleFormSubmission : undefined} />
     </div>
