@@ -9,7 +9,7 @@ const BottomPanel: React.FC<IButtonPanelProps> = ({
   disabled,
 }) => {
   const navigate = useNavigate();
-    return (
+  return (
     <div className={`${style.panel__container} py-5`}>
       <img
         src="/arrowBack.svg"

@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
+import { IUser } from "src/app/Types/user.type";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
+import UserService from "src/app/services/UserService";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 
@@ -8,18 +10,36 @@ const ProfileSettings: React.FC = () => {
   const {
     register,
     formState: { isDirty },
-  } = useForm({
+    handleSubmit,
+  } = useForm<Omit<IUser, "id" | "likes" | "username">>({
     values: {
-      login: user.username,
+      email: user.email ? user.email : "",
+      name: user.name ? user.name : "",
+      phone: user.phone ? user.phone : "",
+      surname: user.surname ? user.surname : "",
     },
   });
-
+  const { mutate } = UserService.updataUser();
+  const onSubmit = (data: Omit<IUser, "id" | "likes" | "username">) => {
+    // mutate(data);
+    console.log(data);
+  };
+  const handleFormSubmission = () => {
+    handleSubmit((data) => onSubmit(data))();
+  };
   return (
     <div className="flex flex-col h-[100dvh]">
-      <main className="container flex-grow py-5">
-        <TextField {...register("login", { required: true })} />
-      </main>
-      <BottomPanel doneFunc={isDirty ? () => {} : undefined} />
+      <form
+        className="container flex-grow py-5"
+        onSubmit={handleFormSubmission}
+      >
+        <TextField {...register("email", { required: true })} />
+        <TextField {...register("", { required: true })} />
+        <TextField {...register("email", { required: true })} />
+        <TextField {...register("email", { required: true })} />
+
+      </form>
+      <BottomPanel doneFunc={isDirty ? handleFormSubmission : undefined} />
     </div>
   );
 };
