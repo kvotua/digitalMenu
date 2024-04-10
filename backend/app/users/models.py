@@ -1,6 +1,6 @@
 import bcrypt
 from pydantic_extra_types.phone_numbers import PhoneNumber
-from pynamodb.attributes import UnicodeAttribute, UnicodeSetAttribute
+from pynamodb.attributes import MapAttribute, UnicodeAttribute, UnicodeSetAttribute
 from pynamodb.models import Model
 
 from app.schemas import CompositionId, ProductId, UserId
@@ -17,10 +17,12 @@ class UserModel(Model):
         aws_secret_access_key = "dummy"
 
     id = UnicodeAttribute(hash_key=True)
-    username = UnicodeAttribute()
-    password = UnicodeAttribute()
     products_likes = UnicodeSetAttribute()
     compositions_likes = UnicodeSetAttribute()
+    cart: MapAttribute[ProductId, int] = MapAttribute()
+
+    username = UnicodeAttribute(null=True)
+    password = UnicodeAttribute(null=True)
     name = UnicodeAttribute(null=True)
     surname = UnicodeAttribute(null=True)
     email = UnicodeAttribute(null=True)
@@ -35,6 +37,7 @@ class UserModel(Model):
             surname=self.surname,
             email=self.email,
             phone=PhoneNumber(self.phone) if self.phone is not None else None,
+            cart=self.cart.as_dict() if self.cart else {},
             likes=UserLikes(
                 products=(
                     list(
@@ -63,11 +66,8 @@ if not UserModel.exists():
     )
 
 if len(list(UserModel.scan(UserModel.username == "admin"))) == 0:
-    user = UserSchema(username="admin", password="admin")
     UserModel(
-        id=user.id,
-        username=user.username,
-        password=bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode(),
-        products_likes=user.likes.products,
-        compositions_likes=user.likes.compositions,
+        id="00000000-0000-0000-0000-000000000000",
+        username="admin",
+        password=bcrypt.hashpw(b"admin", bcrypt.gensalt()).decode(),
     ).save()

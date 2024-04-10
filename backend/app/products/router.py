@@ -15,9 +15,17 @@ from fastapi import (
 from fastapi.responses import FileResponse
 
 from app.products.schemas import Product
-from app.products.service import create_product, delete, get_all, get_product, update
-from app.schemas import JWToken, ProductId
-from app.utils import check_admin
+from app.products.service import (
+    create_product,
+    delete,
+    from_cart,
+    get_all,
+    get_product,
+    to_cart,
+    update,
+)
+from app.schemas import JWToken, ProductId, UserId
+from app.utils import check_admin, jwt_to_id
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -77,6 +85,14 @@ async def post_product(
     return product_id
 
 
+@router.post("/{id}/cart", description="Add product to user's cart")
+async def add_to_cart(
+    user_id: Annotated[UserId, Depends(jwt_to_id)],
+    id: Annotated[ProductId, Path()],
+) -> None:
+    to_cart(user_id, id)
+
+
 @router.patch(
     "/{id}",
     description="Update product info",
@@ -100,3 +116,11 @@ async def delete_product(
     id: Annotated[ProductId, Path()],
 ) -> None:
     delete(id)
+
+
+@router.delete("/{id}/cart", description="Remove product from user's cart")
+async def remove_from_cart(
+    user_id: Annotated[UserId, Depends(jwt_to_id)],
+    id: Annotated[ProductId, Path()],
+) -> None:
+    from_cart(user_id, id)

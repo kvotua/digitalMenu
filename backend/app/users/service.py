@@ -12,7 +12,7 @@ from .utils import id_to_jwt
 
 def create_user() -> JWToken:
     user = User()
-    UserModel(id=user.id, username=user.username, password=user.password).save()
+    UserModel(id=user.id, cart={}).save()
     return id_to_jwt(user.id)
 
 
@@ -44,6 +44,11 @@ def login(username: str, password: str) -> JWToken:
     if len(models) == 0:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong username")
     user = models[0].to_schema()
+    if user.password is None:
+        raise HTTPException(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "User with username doesn't have password",
+        )
     if not bcrypt.checkpw(password.encode(), user.password.encode()):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Wrong password")
     return id_to_jwt(user.id)

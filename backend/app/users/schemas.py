@@ -15,9 +15,10 @@ class UserLikes(BaseModel):
 class User(BaseModel):
     id: UserId = Field(default_factory=lambda: UserId(str(uuid.uuid4())))
     likes: UserLikes = Field(default_factory=lambda: UserLikes())
-    username: str = ""
-    password: str = ""
-    name: str = ""
-    surname: str = ""
+    username: Optional[str] = None
+    password: Optional[str] = None
+    name: Optional[str] = None
+    surname: Optional[str] = None
     email: Optional[EmailStr] = None
     phone: Optional[PhoneNumber] = None
+    cart: dict[ProductId, int] = {}
