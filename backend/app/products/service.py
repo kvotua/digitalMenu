@@ -6,7 +6,8 @@ from app.compositions.models import CompositionModel
 from app.compositions.schemas import Point
 from app.products.models import ProductModel
 from app.products.schemas import Product
-from app.schemas import ProductId
+from app.schemas import ProductId, UserId
+from app.users.models import UserModel
 
 
 def create_product(name: str, description: str, price: int) -> ProductId:
@@ -57,3 +58,33 @@ def update(
     if price is not None:
         model.price = price
     model.save()
+
+
+def to_cart(user_id: UserId, id: ProductId) -> None:
+    try:
+        ProductModel.get(id)
+    except ProductModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong product ID")
+    try:
+        user_model = UserModel.get(user_id)
+    except UserModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not exist")
+    dcart = user_model.cart.as_dict() if user_model.cart is not None else {}
+    dcart[id] = dcart.get(id, 0) + 1
+    user_model.cart = dcart
+    user_model.save()
+
+
+def from_cart(user_id: UserId, id: ProductId) -> None:
+    try:
+        user_model = UserModel.get(user_id)
+    except UserModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not exist")
+    dcart = user_model.cart.as_dict() if user_model.cart is not None else {}
+    if id not in dcart:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Product not in cart")
+    dcart[id] = dcart.get(id) - 1
+    if dcart[id] < 1:
+        dcart.pop(id)
+    user_model.cart = dcart
+    user_model.save()
