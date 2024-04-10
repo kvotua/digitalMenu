@@ -9,19 +9,18 @@ const initialState: Partial<IUser> = {
   name: "",
   phone: "",
   surname: "",
+  cart: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(
-      _,
-      {
-        payload,
-      }: PayloadAction<Omit<IUser, "name" | "surname" | "email" | "phone">>
-    ) {
-      return payload;
+    setUser(state, { payload }: PayloadAction<Partial<IUser>>) {
+      if (payload.phone) {
+        payload.phone = payload.phone.replace(/^tel:/, "");
+      }
+      return { ...state, ...payload };
     },
   },
 });

@@ -9,4 +9,5 @@ export interface IUser {
   surname: string;
   email: string;
   phone: string;
+  cart: { [key: string]: number } | null;
 }

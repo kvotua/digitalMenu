@@ -2,8 +2,12 @@ import { forwardRef } from "react";
 import { IButtonProps } from "./Button.model";
 
 const Button: React.FC<IButtonProps> = forwardRef(
-  ({ handleClick, title, ...props }, ref: React.Ref<HTMLButtonElement>) => (
+  (
+    { handleClick, title, type, ...props },
+    ref: React.Ref<HTMLButtonElement>
+  ) => (
     <button
+      type={type}
       ref={ref}
       form="auth"
       onClick={handleClick}

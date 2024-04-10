@@ -16,9 +16,29 @@ const Profile: React.FC = () => {
   return (
     <div className="flex flex-col h-[100dvh]">
       <main className="container pt-5 flex-grow">
-        <div className="py-5">
+        <div className="py-5 flex flex-col gap-5">
           <TextField
             value={user.username}
+            disabled={true}
+            className="disabled:opacity-100"
+          />
+          <TextField
+            value={user.email}
+            disabled={true}
+            className="disabled:opacity-100"
+          />
+          <TextField
+            value={user.name}
+            disabled={true}
+            className="disabled:opacity-100"
+          />
+          <TextField
+            value={user.surname}
+            disabled={true}
+            className="disabled:opacity-100"
+          />
+          <TextField
+            value={user.phone}
             disabled={true}
             className="disabled:opacity-100"
           />

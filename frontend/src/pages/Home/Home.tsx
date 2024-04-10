@@ -9,7 +9,7 @@ import { BottomUserPanel } from "src/widgets/BottomUserPanel/BottomUserPanel";
 
 const Home: React.FC = () => {
   const tagId = useAppSelector((state) => state.filterSlice.id);
-  const likes = useAppSelector((state) => state.userSlice.likes.compositions);
+  const likes = useAppSelector((state) => state.userSlice.likes?.compositions);
   const { data: compositions = [] } = useQuery({
     queryKey: ["getCompositions", tagId],
     queryFn: async () => {

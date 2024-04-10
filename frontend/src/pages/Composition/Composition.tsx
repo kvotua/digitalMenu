@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
-import { useGetProductById } from "src/app/services/useGetProductById";
 import { useGetProduct } from "src/app/services/useGetProducts";
 import { Point } from "src/shared/Point/Point";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 import Heart from "src/app/assets/heart.svg?react";
 import Share from "src/app/assets/share.svg?react";
-
 import { useAppSelector } from "src/app/hooks/useAppSelector";
+import Cart from "src/app/assets/cart.svg?react";
+import { IProduct } from "src/app/Types/product.type";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
@@ -52,7 +53,9 @@ const Composition: React.FC = () => {
         height: current.clientHeight,
       });
     }
-    setLike(likes.compositions.includes(id!));
+    if (likes) {
+      setLike(likes?.compositions.includes(id!));
+    }
   }, [isLoading, likes]);
   const { mutate: addPoint } = useMutation({
     mutationKey: "addPoint",
@@ -69,7 +72,16 @@ const Composition: React.FC = () => {
     onSuccess: () => navigate(-1),
   });
 
-  const { data: currentProduct } = useGetProductById(activePoint);
+  const { data: currentProduct } = useQuery({
+    queryKey: ["getProductById", activePoint],
+    queryFn: () =>
+      id
+        ? apiWithAuth
+            .get<IProduct>(`/products/${activePoint}`)
+            .then(({ data }) => data)
+        : Promise.resolve(null),
+    onSuccess: () => reset(),
+  });
   const { mutate: deletePoint } = useMutation({
     mutationKey: "deletePoint",
     mutationFn: () =>
@@ -99,6 +111,16 @@ const Composition: React.FC = () => {
     title: "preview",
     url: window.location.href,
   };
+
+  const {
+    mutate: addToCart,
+    isSuccess,
+    reset,
+  } = useMutation({
+    mutationKey: "addToCart",
+    mutationFn: (id: string) => apiWithAuth.post(`products/${id}/cart`),
+    onSuccess: () => queryClient.invalidateQueries("getUser"),
+  });
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
@@ -109,7 +131,6 @@ const Composition: React.FC = () => {
             if (e.currentTarget.id === "container") {
               setPoint({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
             }
-            console.log(e.currentTarget.children);
           }}
         >
           {!isLoading &&
@@ -191,23 +212,40 @@ const Composition: React.FC = () => {
             </select>
           </>
         )}
-      </div>
-      {currentProduct && (
-        <div className="grid grid-cols-2 pt-5 gap-5 pb-20">
-          <img
-            src={`${import.meta.env.VITE_API_URL}/products/${
-              currentProduct?.id
-            }/image`}
-            alt=""
-          />
-          <div className="flex flex-col text-2xl font-bold">
-            <span>{currentProduct?.name}</span>
-            <span>{currentProduct?.price} p.</span>
-          </div>
+        {activePoint && (
+          <div className="grid grid-cols-2 pt-5 gap-5 pb-20">
+            <div className="relative">
+              {isSuccess ? (
+                <img
+                  src="/check.svg"
+                  alt="check"
+                  className="w-10 h-10 items-end bg-[#ae88f1] stroke-white rounded-2xl p-2 absolute -top-2 -right-2"
+                />
+              ) : (
+                <Cart
+                  className="w-10 h-10 items-end bg-[#ae88f1] stroke-white rounded-2xl p-2 absolute -top-2 -right-2"
+                  onClick={() => {
+                    addToCart(activePoint);
+                  }}
+                />
+              )}
+              <img
+                src={`${import.meta.env.VITE_API_URL}/products/${
+                  currentProduct?.id
+                }/image`}
+                alt=""
+                className="rounded-2xl"
+              />
+            </div>
+            <div className="flex flex-col text-2xl font-bold">
+              <span>{currentProduct?.name}</span>
+              <span>{currentProduct?.price} p.</span>
+            </div>
 
-          <p className="col-span-2">{currentProduct?.description}</p>
-        </div>
-      )}
+            <p className="col-span-2">{currentProduct?.description}</p>
+          </div>
+        )}
+      </div>
       <BottomPanel
         deleteFunc={
           userName === "admin"

@@ -8,13 +8,11 @@ const ProfileHeader: React.FC = () => {
   return (
     <>
       <header className="container pt-5">
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <Link to={`/profile/${user.id}/settings`}>
-              <Pencil className="w-10 h-10 absolute -top-2 -right-2" />
-            </Link>
-            <img src="/profile.svg" className="w-20 mx-auto" alt="profile" />
-          </div>
+        <div className="flex flex-col items-center relative">
+          <Link to={`/profile/settings`}>
+            <Pencil className="w-10 h-10 absolute -top-2 -right-2" />
+          </Link>
+          <img src="/profile.svg" className="w-20 mx-auto" alt="profile" />
           <span className="uppercase font-bold">
             {user.username !== "" ? user.username : "Пользователь"}
           </span>
