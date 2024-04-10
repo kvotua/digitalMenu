@@ -70,4 +70,5 @@ if len(list(UserModel.scan(UserModel.username == "admin"))) == 0:
         id="00000000-0000-0000-0000-000000000000",
         username="admin",
         password=bcrypt.hashpw(b"admin", bcrypt.gensalt()).decode(),
+        cart={},
     ).save()
