@@ -8,6 +8,8 @@ import { useGetProduct } from "src/app/services/useGetProducts";
 import { Point } from "src/shared/Point/Point";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 import Heart from "src/app/assets/heart.svg?react";
+import Share from "src/app/assets/share.svg?react";
+
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 
 const Composition: React.FC = () => {
@@ -93,7 +95,10 @@ const Composition: React.FC = () => {
     },
   });
   const userName = useAppSelector((state) => state.userSlice.username);
-
+  const shareData = {
+    title: "preview",
+    url: window.location.href,
+  };
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
@@ -126,7 +131,10 @@ const Composition: React.FC = () => {
               y={point.y}
             />
           )}
-          <div className="flex items-center justify-center absolute bottom-5 right-5  bg-white rounded-full border border-[#ae88f1] px-2">
+          <div
+            className="flex items-center justify-center absolute bottom-5 right-5  bg-white rounded-full border border-[#ae88f1] px-2"
+            onClick={(e) => e.stopPropagation()}
+          >
             <span className="text-3xl">{composition?.likes}</span>
             <Heart
               id="like"
@@ -134,14 +142,19 @@ const Composition: React.FC = () => {
               stroke={like ? "none" : "black"}
               strokeWidth={2}
               className={`w-10 h-10  flex justify-center items-center p-1`}
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={() => {
                 if (!like) {
                   addLike();
                 } else {
                   deleteLike();
                 }
                 setLike(!like);
+              }}
+            />
+            <Share
+              className="w-10 h-10 fill-none stroke-black stroke-2"
+              onClick={() => {
+                navigator.share(shareData);
               }}
             />
           </div>

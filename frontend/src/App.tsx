@@ -41,6 +41,13 @@ function App() {
     onSuccess: (data: IUser) => dispatch(setUser(data)),
     enabled: !!token,
   });
+  // if (
+  //   !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  //     navigator.userAgent
+  //   )
+  // ) {
+  //   return <>no</>;
+  // }
   return <Routing />;
 }
 

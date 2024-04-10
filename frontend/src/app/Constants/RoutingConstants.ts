@@ -4,9 +4,8 @@ export enum RoutingConstants {
   AUTH = "/auth",
   CART = "/cart",
   SEARCH = "/search",
+  SETTINGS = "/profile/:userId/settings",
   PROFILE = "/profile/:userId",
-  FAVORITE = "/profile/:userId/favorite",
-
 
   ADMIN = "/admin",
   ADD_TAGS = "/tag/add",
