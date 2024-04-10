@@ -1,4 +1,5 @@
 import bcrypt
+from pydantic_extra_types.phone_numbers import PhoneNumber
 from pynamodb.attributes import UnicodeAttribute, UnicodeSetAttribute
 from pynamodb.models import Model
 
@@ -20,12 +21,20 @@ class UserModel(Model):
     password = UnicodeAttribute()
     products_likes = UnicodeSetAttribute()
     compositions_likes = UnicodeSetAttribute()
+    name = UnicodeAttribute(null=True)
+    surname = UnicodeAttribute(null=True)
+    email = UnicodeAttribute(null=True)
+    phone = UnicodeAttribute(null=True)
 
     def to_schema(self) -> UserSchema:
         return UserSchema(
             id=UserId(self.id),
             username=self.username,
             password=self.password,
+            name=self.name,
+            surname=self.surname,
+            email=self.email,
+            phone=PhoneNumber(self.phone) if self.phone is not None else None,
             likes=UserLikes(
                 products=(
                     list(

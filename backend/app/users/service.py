@@ -1,3 +1,5 @@
+from typing import Optional
+
 import bcrypt
 from fastapi import HTTPException, status
 
@@ -53,4 +55,28 @@ def update_password(user_id: UserId, password: str) -> None:
     except UserModel.DoesNotExist:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong user ID")
     model.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    model.save()
+
+
+def update_info(
+    user_id: UserId,
+    name: Optional[str] = None,
+    surname: Optional[str] = None,
+    email: Optional[str] = None,
+    phone: Optional[str] = None,
+) -> None:
+    if all(map(lambda x: x is None, (name, surname, email, phone))):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Any of changes required")
+    try:
+        model = UserModel.get(user_id)
+    except UserModel.DoesNotExist:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong user ID")
+    if name is not None:
+        model.name = name
+    if surname is not None:
+        model.surname = surname
+    if email is not None:
+        model.email = email
+    if phone is not None:
+        model.phone = phone
     model.save()

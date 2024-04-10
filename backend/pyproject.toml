@@ -16,6 +16,8 @@ pyjwt = "^2.8.0"
 python-multipart = "^0.0.9"
 pynamodb = "^6.0.0"
 bcrypt = "^4.1.2"
+phonenumbers = "^8.13.34"
+pydantic = {extras = ["email"], version = "^2.6.4"}
 
 
 [tool.poetry.group.dev.dependencies]
