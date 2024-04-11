@@ -4,44 +4,24 @@ import { setUser } from "src/app/Store/slices/userSlice";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 import { Button } from "src/shared/Button/Button";
-import { TextField } from "src/shared/TextField/TextField";
+import { Field } from "src/shared/Field/Field";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
   const [token, setCookie] = useCookies(["userToken"]);
-  console.log(token);
+  token;
   const user = useAppSelector((state) => state.userSlice);
   const navigate = useNavigate();
   return (
     <div className="flex flex-col h-[100dvh]">
       <main className="container pt-5 flex-grow">
         <div className="py-5 flex flex-col gap-5">
-          <TextField
-            value={user.username}
-            disabled={true}
-            className="disabled:opacity-100"
-          />
-          <TextField
-            value={user.email}
-            disabled={true}
-            className="disabled:opacity-100"
-          />
-          <TextField
-            value={user.name}
-            disabled={true}
-            className="disabled:opacity-100"
-          />
-          <TextField
-            value={user.surname}
-            disabled={true}
-            className="disabled:opacity-100"
-          />
-          <TextField
-            value={user.phone}
-            disabled={true}
-            className="disabled:opacity-100"
-          />
+          {user.username && <Field text={user.username} title={"Логин"} />}
+          {user.name && <Field text={user.name} title={"Имя"} />}
+          {user.surname && <Field text={user.surname} title={"Фамилия"} />}
+          {user.phone && <Field text={user.phone} title={"Телефон "} />}
+          {user.email && <Field text={user.email} title={"Почта"} />}
         </div>
         <Button
           title="Выйти"

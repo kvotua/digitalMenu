@@ -13,7 +13,6 @@ const CompositionAdd: React.FC = () => {
   }
   const { data: tags } = useGetTags();
   const [tag, setTeg] = useState<string[]>([]);
-  console.log(tag);
 
   const navigate = useNavigate();
 

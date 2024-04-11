@@ -121,6 +121,7 @@ const Composition: React.FC = () => {
     mutationFn: (id: string) => apiWithAuth.post(`products/${id}/cart`),
     onSuccess: () => queryClient.invalidateQueries("getUser"),
   });
+
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
@@ -175,7 +176,9 @@ const Composition: React.FC = () => {
             <Share
               className="w-10 h-10 fill-none stroke-black stroke-2"
               onClick={() => {
-                navigator.share(shareData);
+                if (navigator.share && navigator.canShare(shareData)) {
+                  navigator.share(shareData);
+                }
               }}
             />
           </div>

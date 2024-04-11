@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { setUser } from "src/app/Store/slices/userSlice";
 import { IUser } from "src/app/Types/user.type";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
@@ -22,6 +23,7 @@ const ProfileSettings: React.FC = () => {
       surname: user.surname ? user.surname : "",
     },
   });
+
   const {
     register: userPassword,
     formState: { isDirty: isDirtyUserPassword },
@@ -41,12 +43,14 @@ const ProfileSettings: React.FC = () => {
   ) => {
     mutate(data);
   };
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleFormSubmission = () => {
     handleSubmit((data) => {
       dispatch(setUser(data));
       onSubmit(data);
     })();
+    navigate(-1);
   };
   return (
     <div className="flex flex-col h-[100dvh]">
