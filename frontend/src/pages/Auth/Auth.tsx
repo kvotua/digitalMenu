@@ -32,7 +32,7 @@ const Auth: React.FC = () => {
     }
   };
   const [token, setCookie] = useCookies(["userToken"]);
-  console.log(token);
+  token;
 
   const navigate = useNavigate();
   const [isReg, setIsReg] = useState(false);
