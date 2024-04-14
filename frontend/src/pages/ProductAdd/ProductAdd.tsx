@@ -65,6 +65,7 @@ const ProductAdd: React.FC = () => {
           type="number"
         />
         <TextField
+        
           value={productInfo.description}
           setValue={(e) =>
             setProductInfo({ ...productInfo, description: e.target.value })

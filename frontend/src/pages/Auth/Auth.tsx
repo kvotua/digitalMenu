@@ -37,6 +37,7 @@ const Auth: React.FC = () => {
   const navigate = useNavigate();
   const [isReg, setIsReg] = useState(false);
   return (
+    
     <main className="container wrapper flex flex-col justify-center items-center h-screen ">
       <ErrorPopup
         errorMessage={errors.username?.message || errors.password?.message}

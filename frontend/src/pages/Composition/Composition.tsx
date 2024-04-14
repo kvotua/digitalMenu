@@ -154,14 +154,16 @@ const Composition: React.FC = () => {
             />
           )}
           <div
-            className="flex items-center justify-center absolute bottom-5 right-5  bg-white rounded-full border border-[#ae88f1] px-2"
+            style={{ zIndex: 1 }}
+            className="flex items-center  justify-center absolute bottom-5 right-5 bg-  rounded-full border border-[#ae88f1] px-5"
             onClick={(e) => e.stopPropagation()}
           >
-            <span className="text-3xl">{composition?.likes}</span>
+            <span className="text-3xl text-white ">{composition?.likes}</span>
             <Heart
+              style={{ zIndex: 1 }}
               id="like"
-              fill={like ? "red" : "none"}
-              stroke={like ? "none" : "black"}
+              fill={like ? "red" : "white"}
+              stroke={like ? "none" : "white"}
               strokeWidth={2}
               className={`w-10 h-10  flex justify-center items-center p-1`}
               onClick={() => {
@@ -174,7 +176,9 @@ const Composition: React.FC = () => {
               }}
             />
             <Share
-              className="w-10 h-10 fill-none stroke-black stroke-2"
+              style={{ zIndex: 1 }}
+              fill={"white"}
+              className="w-10 h-10  stroke-white stroke-2"
               onClick={() => {
                 if (navigator.share && navigator.canShare(shareData)) {
                   navigator.share(shareData);
@@ -194,7 +198,10 @@ const Composition: React.FC = () => {
         </div>
         {userName === "admin" && point.x !== 0 && (
           <>
-            <span className="font-bold">Добавьте продукт к композиции</span>
+            <br />
+            <span className="font-bold gap-5">
+              Добавьте продукт к композиции
+            </span>
             <select
               onChange={(e) => setProduct(e.target.value)}
               className={`appearance-none bg-white p-5 outline-none border border-[#ae88f1] rounded-2xl relative overflow-visible w-full mt-5`}
@@ -218,20 +225,6 @@ const Composition: React.FC = () => {
         {activePoint && (
           <div className="grid grid-cols-2 pt-5 gap-5 pb-20">
             <div className="relative">
-              {isSuccess ? (
-                <img
-                  src="/check.svg"
-                  alt="check"
-                  className="w-10 h-10 items-end bg-[#ae88f1] stroke-white rounded-2xl p-2 absolute -top-2 -right-2"
-                />
-              ) : (
-                <Cart
-                  className="w-10 h-10 items-end bg-[#ae88f1] stroke-white rounded-2xl p-2 absolute -top-2 -right-2"
-                  onClick={() => {
-                    addToCart(activePoint);
-                  }}
-                />
-              )}
               <img
                 src={`${import.meta.env.VITE_API_URL}/products/${
                   currentProduct?.id
@@ -245,7 +238,24 @@ const Composition: React.FC = () => {
               <span>{currentProduct?.price} p.</span>
             </div>
 
-            <p className="col-span-2">{currentProduct?.description}</p>
+            <p className="col-span-2 relative break-words">
+              {currentProduct?.description}
+              {isSuccess ? (
+                <img
+                  src="/check.svg"
+                  alt="check"
+                  className="w-16 h-16 items-end bg-[#ae88f1] rounded-full p-2 absolute -top-[5rem] -right-1"
+                />
+              ) : (
+                <Cart
+                  style={{ zIndex: 1 }}
+                  className="w-16 h-16 items-end bg-[#ae88f1] stroke-white rounded-full p-2 absolute -top-[5rem] -right-1"
+                  onClick={() => {
+                    addToCart(activePoint);
+                  }}
+                />
+              )}
+            </p>
           </div>
         )}
       </div>

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const TagAdd: React.FC = () => {
   const [tagInfo, setTagInfo] = useState({
     name: "",
-    color: "#000",
+    color: "",
   });
   const navigate = useNavigate();
   const { mutate } = useMutation({
@@ -37,8 +37,13 @@ const TagAdd: React.FC = () => {
               id="color"
               className="w-0 h-0 absolute opacity-0"
             />
-            <div className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center">
-              <ColorPicker width="30px" fill={tagInfo.color} />
+            <div
+              className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center"
+              style={{ background: tagInfo.color }}
+            >
+              {/* {tagInfo.color ? null : ( */}
+                <ColorPicker width="50px" fill={tagInfo.color} />
+              {/* )} */}
             </div>
           </label>
         </div>

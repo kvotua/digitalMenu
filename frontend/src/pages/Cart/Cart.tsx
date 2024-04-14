@@ -68,7 +68,7 @@ const Cart: React.FC = () => {
 
               <div className=" border border-black/50 flex gap-5 p-2 rounded-2xl">
                 <span
-                  className="text-xl font-bold"
+                  className="text-xl font-bold cursor-pointer"
                   onClick={() => deleteProductFromCart(id)}
                 >
                   -
@@ -77,7 +77,7 @@ const Cart: React.FC = () => {
                   {cart && Object.values(cart)[i]}
                 </span>
                 <span
-                  className="text-xl font-bold"
+                  className="text-xl font-bold cursor-pointer"
                   onClick={() => addToCart(id)}
                 >
                   +
@@ -90,7 +90,7 @@ const Cart: React.FC = () => {
       {data?.length !== 0 && (
         <div className="container flex flex-col gap-2">
           <span className="text-2xl font-bold">Итого: {totalPrice}</span>
-          <Button title="Оформить заказ" />
+          <Button title="Оформить заказ" handleClick={() => alert('Заказ оформлен')} />
         </div>
       )}
       <BottomPanel />

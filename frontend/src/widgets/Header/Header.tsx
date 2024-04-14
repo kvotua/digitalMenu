@@ -13,7 +13,8 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const userName = useAppSelector((state) => state.userSlice.username);
   return (
-    <>
+    <>  
+    <main className="container cursor-pointer">
       <header className={`${style.header}`}>
         <ul className={style.container}>
           <Tag
@@ -58,6 +59,7 @@ const Header: React.FC = () => {
         )}
       </header>
       <Outlet />
+      </main>
     </>
   );
 };

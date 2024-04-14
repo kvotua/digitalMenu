@@ -9,8 +9,15 @@ export default {
   theme: {
     extend: {
       container: {
-        padding:'20px',
+        padding:'10px',
         center: true,
+        screens: {
+          sm: '570px',
+          md: '570px',
+          lg: '570px',
+          xl: '570px',
+          '2xl': '1496px',
+        },
       }
     },
   },

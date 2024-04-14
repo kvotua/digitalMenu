@@ -7,6 +7,7 @@ import { Masonry } from "@mui/lab";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 import { BottomUserPanel } from "src/widgets/BottomUserPanel/BottomUserPanel";
 
+
 const Home: React.FC = () => {
   const tagId = useAppSelector((state) => state.filterSlice.id);
   const likes = useAppSelector((state) => state.userSlice.likes?.compositions);
@@ -24,6 +25,7 @@ const Home: React.FC = () => {
   const userName = useAppSelector((state) => state.userSlice.username);
   return (
     <main className="container flex flex-col h-screen">
+
       {userName === "admin" && (
         <div className="flex gap-5 pb-5">
           <Link to={"add/composition/"} className={style.addButton}>
@@ -34,15 +36,19 @@ const Home: React.FC = () => {
           </Link>
         </div>
       )}
-      <Masonry className="!m-0 flex-grow" columns={2} spacing={2}>
+      <Masonry className="!m-0 flex-grow" columns={{md: 3, sm: 2, xs: 2}} spacing={0.9} defaultColumns={2}>
         {compositions?.map((item: string) => (
+          
           <CardComposotion
             key={item}
             id={item}
             image={`${import.meta.env.VITE_API_URL}/compositions/${item}/image`}
+            composition={item}
           />
         ))}
+        
       </Masonry>
+      
       <BottomUserPanel />
     </main>
   );
