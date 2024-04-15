@@ -70,7 +70,6 @@ const Composition: React.FC = () => {
       }
       return Promise.resolve(null);
     },
-    onSuccess: () => navigate(-1),
   });
 
   const { data: currentProduct } = useQuery({
@@ -129,7 +128,7 @@ const Composition: React.FC = () => {
   });
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
-      <div className=" flex-grow ">
+      <div className="flex-grow">
         <div
           className="w-full relative rounded-2xl p-2 min-h-20"
           id="container"
