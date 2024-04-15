@@ -3,7 +3,6 @@ import { useMutation } from "react-query";
 import { apiWithAuth } from "src/app/Http";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
-import ColorPicker from "src/app/assets/ColorPicker.svg?react";
 import { useNavigate } from "react-router-dom";
 
 const TagAdd: React.FC = () => {
@@ -42,7 +41,7 @@ const TagAdd: React.FC = () => {
               style={{ background: tagInfo.color }}
             >
               {/* {tagInfo.color ? null : ( */}
-                <ColorPicker width="50px" fill={tagInfo.color} />
+                <img src="/ColorPicker.svg" alt="color picker" className="w-10 rounded-full" />
               {/* )} */}
             </div>
           </label>
