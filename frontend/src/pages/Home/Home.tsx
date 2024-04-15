@@ -39,7 +39,7 @@ const Home: React.FC = () => {
             </Link>
             <Link to={"add/product/"} className={style.addButton}>
               <Upload className="w-5 h-5 stroke-black" />
-              Добавить продукт
+              Добавить <br /> продукт
             </Link>
           </>
         )}
