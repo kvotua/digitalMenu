@@ -122,12 +122,16 @@ const Composition: React.FC = () => {
     mutationFn: (id: string) => apiWithAuth.post(`products/${id}/cart`),
     onSuccess: () => queryClient.invalidateQueries("getUser"),
   });
-
+  const { mutate: deleteProductFromCart, isSuccess: successDeleteProduct } = useMutation({
+    mutationKey: "deleteProductFromCart",
+    mutationFn: (id: string) => apiWithAuth.delete(`/products/${id}/cart`),
+    onSuccess: () => queryClient.invalidateQueries("getUser"),
+  });
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
         <div
-          className="w-full relative border rounded-2xl border-[#ae88f1] p-2 min-h-20"
+          className="w-full relative rounded-2xl p-2 min-h-20"
           id="container"
           onClick={(e) => {
             if (e.currentTarget.id === "container") {
@@ -221,7 +225,7 @@ const Composition: React.FC = () => {
                   </option>
                 ))}
             </select>
-            <Link to={'/add/product'} className="block pt-5">
+            <Link to={"/add/product"} className="block pt-5">
               <Button title="Создать новый" />
             </Link>
           </>
@@ -244,11 +248,12 @@ const Composition: React.FC = () => {
               <span>{currentProduct?.price} p.</span>
             </div>
 
-            {isSuccess ? (
+            {isSuccess && !successDeleteProduct ? (
               <img
                 src="/check.svg"
                 alt="check"
                 className="w-10 h-10 items-end bg-[#ae88f1] rounded-full p-2 absolute bottom-0 -right-1"
+                onClick={() => deleteProductFromCart(activePoint)}
               />
             ) : (
               <Cart
