@@ -99,6 +99,7 @@ async def post_composition_image(
     if not exist(id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
     validate_file_size_type(image)
+    await image.seek(0)
     with open(f"/storage/{id}", "wb") as file:
         file.write(image.file.read())
 
