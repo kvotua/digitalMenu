@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const likes = useAppSelector((state) => state.userSlice.likes);
   return (
     <>
-      <main className="container cursor-pointer">
+      <div className="container cursor-pointer h-full">
         <header className={`${style.header}`}>
           <ul className={style.container}>
             <Tag
@@ -63,7 +63,7 @@ const Header: React.FC = () => {
           )}
         </header>
         <Outlet />
-      </main>
+      </div>
     </>
   );
 };

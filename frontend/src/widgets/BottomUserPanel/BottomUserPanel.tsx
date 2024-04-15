@@ -28,17 +28,19 @@ const BottomUserPanel: React.FC = () => {
             <img src={user ? "/login.svg" : "/login.svg"} />
           </Link>
         )}
-        <Link
-          to={"/cart"}
-          className="w-8 h-8 rounded-full col-span-2 justify-self-center relative"
-        >
-          {user.cart && Object.keys(user?.cart).length > 0 && (
-            <div className="w-5 h-5 bg-red-500 rounded-full absolute -top-2 -right-2 flex justify-center items-center text-white">
-              {Object.keys(user?.cart).length}
-            </div>
-          )}
-          <Cart className=" stroke-[#ae88f1]" />
-        </Link>
+        {user.name === "admin" && (
+          <Link
+            to={"/cart"}
+            className="w-8 h-8 rounded-full col-span-2 justify-self-center relative"
+          >
+            {user.cart && Object.keys(user?.cart).length > 0 && (
+              <div className="w-5 h-5 bg-red-500 rounded-full absolute -top-2 -right-2 flex justify-center items-center text-white">
+                {Object.keys(user?.cart).length}
+              </div>
+            )}
+            <Cart className=" stroke-[#ae88f1]" />
+          </Link>
+        )}
       </div>
     );
   }, [user]);

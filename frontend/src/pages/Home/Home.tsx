@@ -24,7 +24,7 @@ const Home: React.FC = () => {
   });
   const userName = useAppSelector((state) => state.userSlice.username);
   return (
-    <main className="container flex flex-col h-screen">
+    <main className="container flex flex-col pb-20">
       <Masonry
         className="!m-0 flex-grow"
         columns={{ md: 3, sm: 2, xs: 2 }}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { apiWithAuth } from "src/app/Http";
 import { IComposition } from "src/app/Types/composition.type";
@@ -12,6 +12,7 @@ import Share from "src/app/assets/share.svg?react";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 import Cart from "src/app/assets/cart.svg?react";
 import { IProduct } from "src/app/Types/product.type";
+import { Button } from "src/shared/Button/Button";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
@@ -220,6 +221,9 @@ const Composition: React.FC = () => {
                   </option>
                 ))}
             </select>
+            <Link to={'/add/product'} className="block pt-5">
+              <Button title="Создать новый" />
+            </Link>
           </>
         )}
         {activePoint && (
