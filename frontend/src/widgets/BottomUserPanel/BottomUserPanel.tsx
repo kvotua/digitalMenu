@@ -6,6 +6,8 @@ import Cart from "src/app/assets/cart.svg?react";
 
 const BottomUserPanel: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice);
+  console.log(user?.cart);
+
   return (
     <div className={style.panel__container}>
       <Link to={"/search"} className="w-8 h-8 justify-self-start rounded-full">
@@ -25,8 +27,13 @@ const BottomUserPanel: React.FC = () => {
       )}
       <Link
         to={"/cart"}
-        className="w-8 h-8 rounded-full col-span-2 justify-self-center"
+        className="w-8 h-8 rounded-full col-span-2 justify-self-center relative"
       >
+        {user.cart && Object.keys(user?.cart).length > 0 && (
+          <div className="w-5 h-5 bg-red-500 rounded-full absolute -top-2 -right-2 flex justify-center items-center text-white">
+            {Object.keys(user?.cart).length}
+          </div>
+        )}
         <Cart className="stroke-black/40" />
       </Link>
     </div>

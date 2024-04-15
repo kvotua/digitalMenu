@@ -1,5 +1,8 @@
 .header{
     @apply w-full my-5 flex justify-between overflow-scroll pl-5;
+    &::-webkit-scrollbar{
+        display: none;
+    }
     .container{
         @apply flex gap-5;
     }
