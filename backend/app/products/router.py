@@ -80,6 +80,7 @@ async def post_product(
     price: Annotated[int, Form(gt=0)],
 ) -> ProductId:
     validate_file_size_type(image)
+    await image.seek(0)
     product_id = create_product(name, description, price)
     with open(f"/storage/{product_id}", "wb") as file:
         file.write(image.file.read())
