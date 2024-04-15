@@ -234,7 +234,7 @@ const Composition: React.FC = () => {
 
             <div className="flex flex-col font-bold justify-between">
               <span>{currentProduct?.name}</span>
-              <p className="col-span-2 relative break-words font-light h-10 overflow-scroll w-2/3">
+              <p className="col-span-2 relative break-words font-light overflow-scroll w-3/4">
                 {currentProduct?.description}
               </p>
               <span>{currentProduct?.price} p.</span>
