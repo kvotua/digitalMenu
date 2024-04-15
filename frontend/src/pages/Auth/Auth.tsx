@@ -75,11 +75,11 @@ const Auth: React.FC = () => {
         <Button
           form="auth"
           type="submit"
-          title={!isReg ? "Войти" : "Зарегестрироваться"}
+          title={!isReg ? "Войти" : "Зарегистрироваться"}
           handleClick={() => {}}
         />
         <span onClick={() => setIsReg(!isReg)}>
-          {isReg ? "Войти" : "Зарегестрироваться"}
+          {isReg ? "Войти" : "Зарегистрироваться"}
         </span>
       </div>
       <BottomPanel />
