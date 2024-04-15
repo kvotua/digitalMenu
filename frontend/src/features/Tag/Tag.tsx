@@ -5,7 +5,14 @@ import { apiWithAuth } from "src/app/Http";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
 import { setFilter } from "src/app/Store/slices/filterSlice";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
-const Tag: React.FC<ITagProps> = ({ color, title, id, tagId, setTagId }) => {
+const Tag: React.FC<ITagProps> = ({
+  color,
+  title,
+  id,
+  tagId,
+  setTagId,
+  slice = true,
+}) => {
   const userName = useAppSelector((state) => state.userSlice.username);
 
   const queryClient = useQueryClient();
@@ -34,13 +41,13 @@ const Tag: React.FC<ITagProps> = ({ color, title, id, tagId, setTagId }) => {
             <img
               src="/trash.svg"
               alt="trash"
-              className="absolute w-6 -top-0 -right-0"
+              className="absolute w-5 -bottom-0 -right-0"
               onClick={() => deleteTag()}
             />
           )}
       </div>
       <span className={style.innerText}>
-        {title.length > 6 ? title.slice(0, 6) + "..." : title}
+        {slice && title.length > 6 ? title.slice(0, 6) + "..." : title}
       </span>
     </div>
   );

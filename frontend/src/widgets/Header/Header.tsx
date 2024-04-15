@@ -12,53 +12,57 @@ const Header: React.FC = () => {
   const { data: tags } = useGetTags();
   const dispatch = useAppDispatch();
   const userName = useAppSelector((state) => state.userSlice.username);
+  const likes = useAppSelector((state) => state.userSlice.likes);
   return (
-    <>  
-    <main className="container cursor-pointer">
-      <header className={`${style.header}`}>
-        <ul className={style.container}>
-          <Tag
-            color={"#88b874"}
-            title={"Все"}
-            id={"0"}
-            tagId={tagId}
-            setTagId={() => {
-              dispatch(setFilter(""));
-              setTagId("0");
-            }}
-          />
-          <Tag
-            color={"pink"}
-            title={"Лайки"}
-            id={"-1"}
-            tagId={tagId}
-            setTagId={() => {
-              dispatch(setFilter("likes"));
-              setTagId("-1");
-            }}
-          />
-          {tags?.map(({ color, name, id }) => (
-            <li key={id} onClick={() => dispatch(setFilter(id))}>
+    <>
+      <main className="container cursor-pointer">
+        <header className={`${style.header}`}>
+          <ul className={style.container}>
+            <Tag
+              color={"#88b874"}
+              title={"Все"}
+              id={"0"}
+              tagId={tagId}
+              setTagId={() => {
+                dispatch(setFilter(""));
+                setTagId("0");
+              }}
+            />
+            {likes?.compositions && likes.compositions.length > 0 && (
               <Tag
-                color={color}
-                title={name}
-                id={id}
+                color={"pink"}
+                title={"Избранное"}
+                id={"-1"}
                 tagId={tagId}
-                setTagId={setTagId}
+                setTagId={() => {
+                  dispatch(setFilter("likes"));
+                  setTagId("-1");
+                }}
+                slice={false}
               />
-            </li>
-          ))}
-        </ul>
-        {userName === "admin" && (
-          <Link to={"/tag/add"} className={style.cart}>
-            <div className={style.innerTags}>
-              <img src="/add.svg" className="w-10 h-10" />
-            </div>
-            <span className={style.innerText}>Добавить</span>
-          </Link>
-        )}
-      </header>
-      <Outlet />
+            )}
+            {tags?.map(({ color, name, id }) => (
+              <li key={id} onClick={() => dispatch(setFilter(id))}>
+                <Tag
+                  color={color}
+                  title={name}
+                  id={id}
+                  tagId={tagId}
+                  setTagId={setTagId}
+                />
+              </li>
+            ))}
+          </ul>
+          {userName === "admin" && (
+            <Link to={"/tag/add"} className={style.cart}>
+              <div className={style.innerTags}>
+                <img src="/add.svg" className="w-10 h-10" />
+              </div>
+              <span className={style.innerText}>Добавить</span>
+            </Link>
+          )}
+        </header>
+        <Outlet />
       </main>
     </>
   );

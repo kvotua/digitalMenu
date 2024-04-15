@@ -47,7 +47,7 @@ const Cart: React.FC = () => {
       <main className="container pt-5 flex-grow flex flex-col gap-5">
         {data?.length === 0 ? (
           <div className="flex justify-center items-center h-full text-2xl font-bold">
-            У вас нет продуктов
+            Ваша карзина пуста
           </div>
         ) : (
           data?.map(({ name, id, price }, i) => (

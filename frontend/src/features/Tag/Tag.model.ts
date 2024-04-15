@@ -5,4 +5,5 @@ export interface ITagProps {
   tagId: string;
   setTagId: (a: string) => void;
   trashClick?: () => void;
+  slice?: boolean;
 }

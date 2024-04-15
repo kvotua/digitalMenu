@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Masonry } from "@mui/lab";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 import { BottomUserPanel } from "src/widgets/BottomUserPanel/BottomUserPanel";
-
+import Upload from "src/app/assets/upload.svg?react";
 
 const Home: React.FC = () => {
   const tagId = useAppSelector((state) => state.filterSlice.id);
@@ -25,20 +25,25 @@ const Home: React.FC = () => {
   const userName = useAppSelector((state) => state.userSlice.username);
   return (
     <main className="container flex flex-col h-screen">
-
-      {userName === "admin" && (
-        <div className="flex gap-5 pb-5">
-          <Link to={"add/composition/"} className={style.addButton}>
-            Добавить композицию
-          </Link>
-          <Link to={"add/product/"} className={style.addButton}>
-            Добавить продукт
-          </Link>
-        </div>
-      )}
-      <Masonry className="!m-0 flex-grow" columns={{md: 3, sm: 2, xs: 2}} spacing={0.9} defaultColumns={2}>
+      <Masonry
+        className="!m-0 flex-grow"
+        columns={{ md: 3, sm: 2, xs: 2 }}
+        spacing={0.9}
+        defaultColumns={2}
+      >
+        {userName === "admin" && (
+          <>
+            <Link to={"add/composition/"} className={style.addButton}>
+              <Upload className="w-5 h-5 stroke-black" />
+              Добавить композицию
+            </Link>
+            <Link to={"add/product/"} className={style.addButton}>
+              <Upload className="w-5 h-5 stroke-black" />
+              Добавить продукт
+            </Link>
+          </>
+        )}
         {compositions?.map((item: string) => (
-          
           <CardComposotion
             key={item}
             id={item}
@@ -46,9 +51,8 @@ const Home: React.FC = () => {
             composition={item}
           />
         ))}
-        
       </Masonry>
-      
+
       <BottomUserPanel />
     </main>
   );

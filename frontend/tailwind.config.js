@@ -18,6 +18,9 @@ export default {
           xl: '570px',
           '2xl': '1496px',
         },
+      },
+      fontFamily: {
+        'sans': ['Roboto'],
       }
     },
   },

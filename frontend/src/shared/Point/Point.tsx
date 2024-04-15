@@ -15,15 +15,17 @@ const Point: React.FC<{
       }}
       id={product_id}
       //   key={product_id}
-      className={`absolute -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full z-[999999] flex justify-center items-center ${
-        product_id === activePoint ? "bg-red-500" : ""
-      }`}
+      className={`absolute -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full z-[999999] flex justify-center items-center`}
       style={{
         top: y,
         left: x,
       }}
     >
-      <div className={`w-1/2 h-1/2 bg-white rounded-full `}></div>
+      <div
+        className={`w-1/2 h-1/2  rounded-full  ${
+          product_id === activePoint ? "bg-[#ae88f1]" : "bg-white"
+        } `}
+      ></div>
     </div>
   );
 };

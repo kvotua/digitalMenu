@@ -126,7 +126,7 @@ const Composition: React.FC = () => {
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className=" flex-grow ">
         <div
-          className="w-full relative border rounded-2xl border-[#ae88f1] p-2"
+          className="w-full relative border rounded-2xl border-[#ae88f1] p-2 min-h-20"
           id="container"
           onClick={(e) => {
             if (e.currentTarget.id === "container") {
@@ -155,17 +155,17 @@ const Composition: React.FC = () => {
           )}
           <div
             style={{ zIndex: 1 }}
-            className="flex items-center  justify-center absolute bottom-5 right-5 bg-  rounded-full border border-[#ae88f1] px-5"
+            className="flex items-center justify-center absolute bottom-5 right-5 rounded-full border border-[#ae88f1] bg-[#ae88f1] px-5 "
             onClick={(e) => e.stopPropagation()}
           >
-            <span className="text-3xl text-white ">{composition?.likes}</span>
+            <span className="text-2xl text-white ">{composition?.likes}</span>
             <Heart
               style={{ zIndex: 1 }}
               id="like"
               fill={like ? "red" : "white"}
               stroke={like ? "none" : "white"}
               strokeWidth={2}
-              className={`w-10 h-10  flex justify-center items-center p-1`}
+              className={`w-8 h-8  flex justify-center items-center p-1`}
               onClick={() => {
                 if (!like) {
                   addLike();
@@ -178,7 +178,7 @@ const Composition: React.FC = () => {
             <Share
               style={{ zIndex: 1 }}
               fill={"white"}
-              className="w-10 h-10  stroke-white stroke-2"
+              className="w-7 *: h-7 stroke-white stroke-2"
               onClick={() => {
                 if (navigator.share && navigator.canShare(shareData)) {
                   navigator.share(shareData);
@@ -223,39 +223,38 @@ const Composition: React.FC = () => {
           </>
         )}
         {activePoint && (
-          <div className="grid grid-cols-2 pt-5 gap-5 pb-20">
-            <div className="relative">
-              <img
-                src={`${import.meta.env.VITE_API_URL}/products/${
-                  currentProduct?.id
-                }/image`}
-                alt=""
-                className="rounded-2xl"
-              />
-            </div>
-            <div className="flex flex-col text-2xl font-bold">
+          <div className="grid grid-cols-2 pt-5 gap-5 relative">
+            <img
+              src={`${import.meta.env.VITE_API_URL}/products/${
+                currentProduct?.id
+              }/image`}
+              alt=""
+              className="rounded-2xl"
+            />
+
+            <div className="flex flex-col font-bold justify-between">
               <span>{currentProduct?.name}</span>
+              <p className="col-span-2 relative break-words font-light h-10 overflow-scroll w-2/3">
+                {currentProduct?.description}
+              </p>
               <span>{currentProduct?.price} p.</span>
             </div>
 
-            <p className="col-span-2 relative break-words">
-              {currentProduct?.description}
-              {isSuccess ? (
-                <img
-                  src="/check.svg"
-                  alt="check"
-                  className="w-16 h-16 items-end bg-[#ae88f1] rounded-full p-2 absolute -top-[5rem] -right-1"
-                />
-              ) : (
-                <Cart
-                  style={{ zIndex: 1 }}
-                  className="w-16 h-16 items-end bg-[#ae88f1] stroke-white rounded-full p-2 absolute -top-[5rem] -right-1"
-                  onClick={() => {
-                    addToCart(activePoint);
-                  }}
-                />
-              )}
-            </p>
+            {isSuccess ? (
+              <img
+                src="/check.svg"
+                alt="check"
+                className="w-10 h-10 items-end bg-[#ae88f1] rounded-full p-2 absolute bottom-0 -right-1"
+              />
+            ) : (
+              <Cart
+                style={{ zIndex: 1 }}
+                className="w-10 h-10 items-end bg-[#ae88f1] stroke-white rounded-full p-2 absolute bottom-0 -right-1"
+                onClick={() => {
+                  addToCart(activePoint);
+                }}
+              />
+            )}
           </div>
         )}
       </div>
