@@ -29,7 +29,7 @@ from app.compositions.service import (
     unlike,
 )
 from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
-from app.utils import check_admin, jwt_to_id
+from app.utils import check_admin, jwt_to_id, validate_file_size_type
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])
 
@@ -88,7 +88,7 @@ async def post_composition(
 
 @router.post(
     "/{id}/image",
-    description="Add image to composition (no file type and size verification now)",
+    description="Add image to composition",
     dependencies=[Depends(check_admin)],
 )
 async def post_composition_image(
@@ -98,6 +98,7 @@ async def post_composition_image(
 ) -> None:
     if not exist(id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    validate_file_size_type(image)
     with open(f"/storage/{id}", "wb") as file:
         file.write(image.file.read())
 
