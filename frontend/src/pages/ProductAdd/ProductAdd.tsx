@@ -45,7 +45,7 @@ const ProductAdd: React.FC = () => {
               className="absolute top-0 left-0 w-full h-full object-cover rounded-2xl"
             />
           )}
-          Загрузить изображение
+          Загрузить изображение (Максимум 2Мб.)
         </div>
       </label>
       <div className="pt-5 pb-20 flex flex-col gap-5">

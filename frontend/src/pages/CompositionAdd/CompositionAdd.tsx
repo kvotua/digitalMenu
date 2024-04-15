@@ -34,7 +34,7 @@ const CompositionAdd: React.FC = () => {
     <>
       <main className="container pt-5">
         <h2 className="text-2xl text-center font-bold pb-5">
-          Создать композицию
+          Создать композицию 
         </h2>
         <label htmlFor="image">
           {!img && (
@@ -56,7 +56,7 @@ const CompositionAdd: React.FC = () => {
                 className="absolute top-0 left-0 w-full h-full object-cover rounded-2xl"
               />
             )}
-            Загрузить фото
+            Загрузить фото (Максимум 2Мб.)
           </div>
         </label>
         <div className="appearance-none pt-5 pb-20 flex flex-col gap-5 ">
