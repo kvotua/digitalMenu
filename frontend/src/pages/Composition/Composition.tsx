@@ -231,7 +231,7 @@ const Composition: React.FC = () => {
                       })
                   : []
               }
-              onChange={(e, newValue) => {
+              onChange={(_, newValue) => {
                 if (newValue) {
                   setProduct(newValue?.id);
                   // queryClient.invalidateQueries("getComposition");
