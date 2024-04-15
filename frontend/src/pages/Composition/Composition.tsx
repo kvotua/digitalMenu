@@ -13,6 +13,7 @@ import { useAppSelector } from "src/app/hooks/useAppSelector";
 import Cart from "src/app/assets/cart.svg?react";
 import { IProduct } from "src/app/Types/product.type";
 import { Button } from "src/shared/Button/Button";
+import { Autocomplete, TextField } from "@mui/material";
 
 const Composition: React.FC = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const Composition: React.FC = () => {
         .get<IComposition>(`/compositions/${id}`)
         .then(({ data }) => data),
   });
-  const { data: products } = useGetProduct();
+  const { data: products = [] } = useGetProduct();
   const [activePoint, setActivePoint] = useState<string>("");
   const [point, setPoint] = useState({
     x: 0,
@@ -58,6 +59,7 @@ const Composition: React.FC = () => {
       setLike(likes?.compositions.includes(id!));
     }
   }, [isLoading, likes]);
+
   const { mutate: addPoint } = useMutation({
     mutationKey: "addPoint",
     mutationFn: () => {
@@ -70,6 +72,7 @@ const Composition: React.FC = () => {
       }
       return Promise.resolve(null);
     },
+    onSuccess: () => window.location.reload(),
   });
 
   const { data: currentProduct } = useQuery({
@@ -121,11 +124,13 @@ const Composition: React.FC = () => {
     mutationFn: (id: string) => apiWithAuth.post(`products/${id}/cart`),
     onSuccess: () => queryClient.invalidateQueries("getUser"),
   });
-  const { mutate: deleteProductFromCart, isSuccess: successDeleteProduct } = useMutation({
-    mutationKey: "deleteProductFromCart",
-    mutationFn: (id: string) => apiWithAuth.delete(`/products/${id}/cart`),
-    onSuccess: () => queryClient.invalidateQueries("getUser"),
-  });
+  const { mutate: deleteProductFromCart, isSuccess: successDeleteProduct } =
+    useMutation({
+      mutationKey: "deleteProductFromCart",
+      mutationFn: (id: string) => apiWithAuth.delete(`/products/${id}/cart`),
+      onSuccess: () => queryClient.invalidateQueries("getUser"),
+    });
+
   return (
     <main className="container pt-5 flex flex-col min-h-screen">
       <div className="flex-grow">
@@ -206,24 +211,35 @@ const Composition: React.FC = () => {
             <span className="font-bold gap-5">
               Добавьте продукт к композиции
             </span>
-            <select
-              onChange={(e) => setProduct(e.target.value)}
-              className={`appearance-none bg-white p-5 outline-none border border-[#ae88f1] rounded-2xl relative overflow-visible w-full mt-5`}
-            >
-              <option value="0">Выберите продукт</option>
-              {products
-                ?.filter((product) => {
-                  const bools = composition?.points.map(
-                    ({ product_id }) => product.id === product_id
-                  );
-                  return !bools?.includes(true);
-                })
-                .map(({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                ))}
-            </select>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={
+                products
+                  ? products
+                      ?.filter((product) => {
+                        const bools = composition?.points.map(
+                          ({ product_id }) => product.id === product_id
+                        );
+                        return !bools?.includes(true);
+                      })
+                      .map((product) => {
+                        return {
+                          label: product.name,
+                          id: product.id,
+                        };
+                      })
+                  : []
+              }
+              onChange={(e, newValue) => {
+                if (newValue) {
+                  setProduct(newValue?.id);
+                  // queryClient.invalidateQueries("getComposition");
+                }
+              }}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Movie" />}
+            />
             <Link to={"/add/product"} className="block pt-5">
               <Button title="Создать новый" />
             </Link>
