@@ -5,6 +5,7 @@ import { Admin } from "src/pages/Admin/Admin";
 import { TagAdd } from "src/pages/TagAdd/TagAdd";
 import { Composition } from "src/pages/Composition/Composition";
 import { ProductAdd } from "src/pages/ProductAdd/ProductAdd";
+import { ProdactManagement } from "src/pages/ProdactManagement/ProdactManagement";
 import { CompositionAdd } from "src/pages/CompositionAdd/CompositionAdd";
 import { Search } from "src/pages/Search/Search";
 import { ProfileSettings } from "src/pages/ProfileSettings/ProfileSettings";
@@ -52,6 +53,10 @@ export const authRoutes = [
   {
     path: RoutingConstants.ADD_PRODUCT,
     Element: ProductAdd,
+  },
+  {
+    path: RoutingConstants.ADD_PRODUCTMANAGEMENT,
+    Element: ProdactManagement,
   },
   {
     path: RoutingConstants.ADD_COMPOSITION,

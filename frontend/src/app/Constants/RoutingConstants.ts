@@ -10,5 +10,6 @@ export enum RoutingConstants {
   ADMIN = "/admin",
   ADD_TAGS = "/tag/add",
   ADD_PRODUCT = "add/product/",
+  ADD_PRODUCTMANAGEMENT = "add/productManagement/",
   ADD_COMPOSITION = "add/composition",
 }

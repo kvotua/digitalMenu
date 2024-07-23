@@ -2,10 +2,10 @@
   @apply w-full my-5 flex justify-between overflow-x-scroll pl-5;
 }
 .header .container {
-  @apply flex gap-5;
+  @apply flex gap-5 ;
 }
 .header .cart {
-  @apply text-center sticky right-0 bg-white px-5 flex flex-col;
+  @apply text-center sticky right-0 bg-black px-5 flex flex-col;
 }
 .header .cart .innerTags {
   @apply w-16 h-16 rounded-full flex justify-center items-center;

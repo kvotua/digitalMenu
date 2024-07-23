@@ -1,0 +1,9 @@
+.round_trash{
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    border-radius: 50%;
+    right: -0px;
+    bottom: -0px;
+    position: absolute;
+}

@@ -7,7 +7,7 @@
         @apply flex gap-5;
     }
     .cart{
-        @apply text-center sticky right-0 bg-white px-5 flex flex-col ;  
+        @apply text-center sticky right-0 bg-black px-5 flex flex-col ;  
     
         .innerTags{
             @apply w-16 h-16 rounded-full flex justify-center items-center;

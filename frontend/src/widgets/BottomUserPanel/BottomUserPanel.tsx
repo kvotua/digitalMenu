@@ -4,13 +4,16 @@ import style from "./BottomUserPanel.module.scss";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
 import Cart from "src/app/assets/cart.svg?react";
 import { useMemo } from "react";
+import Upload from "src/app/assets/upload.svg?react";
+
 
 const BottomUserPanel: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice);
+  const userName = useAppSelector((state) => state.userSlice.username);
   return useMemo(() => {
     return (
       <div className={style.panel__container}>
-        <Link
+        {/* <Link
           to={"/search"}
           className="w-8 h-8 justify-self-start rounded-full"
         >
@@ -27,7 +30,17 @@ const BottomUserPanel: React.FC = () => {
           <Link to={"/auth"} className="w-8 h-8 justify-self-end rounded-full">
             <img src={user ? "/login.svg" : "/login.svg"} />
           </Link>
+        )} */}
+
+        {userName === "admin" && (
+          <>
+          
+            <Link to={"add/composition/"} className="col-span-2 p-1 justify-self-center">
+              <Upload className=" w-50 h-50" />
+            </Link>
+          </>
         )}
+        
         {user.name === "admin" && (
           <Link
             to={"/cart"}

@@ -12,16 +12,24 @@ export default {
         padding:'10px',
         center: true,
         screens: {
-          sm: '570px',
-          md: '570px',
-          lg: '570px',
-          xl: '570px',
+          sm: '670px',
+          md: '670px',
+          lg: '670px',
+          xl: '670px',
           '2xl': '1496px',
         },
+        
       },
       fontFamily: {
         'sans': ['Roboto'],
-      }
+      },
+      backgroundColor: {
+        'black': '#111111', // Добавляем кастомный цвет фона
+      },
+      textColor: {
+        'white': '#ffffff', // Добавляем кастомный цвет текста
+      },
+      
     },
   },
   plugins: [

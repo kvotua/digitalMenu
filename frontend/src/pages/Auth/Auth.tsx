@@ -15,6 +15,8 @@ const Auth: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+  console.log(errors);
+  
   const onSubmit = (data: FormValues) => {
     if (isReg) {
       apiWithAuth.post("/users/assign", data).then(({ data }) => {
@@ -54,9 +56,11 @@ const Auth: React.FC = () => {
           <TextField
             {...register("username", {
               required: "Логин",
+              
             })}
             className="border-none py-2"
             placeholder="Логин"
+            errorMessage={errors.username?.message}
           />
           <hr
             className={`border-[#ae88f1] mx-3 ${

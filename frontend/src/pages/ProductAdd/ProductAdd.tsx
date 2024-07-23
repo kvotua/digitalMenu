@@ -5,6 +5,7 @@ import { apiWithAuth } from "src/app/Http";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 
+
 const ProductAdd: React.FC = () => {
   const [productInfo, setProductInfo] = useState({
     name: "",
@@ -13,6 +14,9 @@ const ProductAdd: React.FC = () => {
   });
   const [img, setImg] = useState<null | File>(null);
   const navigate = useNavigate();
+
+
+  const isValid = true;
 
   const formData = new FormData();
   if (img) {
@@ -37,7 +41,7 @@ const ProductAdd: React.FC = () => {
           onChange={(e) => setImg(e.target.files && e.target.files[0])}
         />
 
-        <div className="w-full min-h-80 border border-[#ae88f1] flex items-center justify-center rounded-2xl relative">
+        <div  className="w-full min-h-80 border border-[#ae88f1] flex items-center justify-center rounded-2xl relative">
           {img && (
             <img
               src={URL.createObjectURL(img)}
@@ -47,6 +51,7 @@ const ProductAdd: React.FC = () => {
           )}
           Загрузить изображение (Максимум 2Мб.)
         </div>
+
       </label>
       <div className="pt-5 pb-20 flex flex-col gap-5">
         <TextField
@@ -62,6 +67,7 @@ const ProductAdd: React.FC = () => {
             setProductInfo({ ...productInfo, price: e.target.value })
           }
           placeholder="Цена"
+          min={0}
           type="number"
         />
         <TextField
@@ -74,7 +80,7 @@ const ProductAdd: React.FC = () => {
           big
         />
       </div>
-      <BottomPanel doneFunc={mutate} disabled={isLoading} />
+      <BottomPanel isValid={isValid} doneFunc={mutate} disabled={isLoading} />
     </main>
   );
 };

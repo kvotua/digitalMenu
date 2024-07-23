@@ -14,8 +14,11 @@ import Cart from "src/app/assets/cart.svg?react";
 import { IProduct } from "src/app/Types/product.type";
 import { Button } from "src/shared/Button/Button";
 import { Autocomplete, TextField } from "@mui/material";
+import "./Composition.css";
 
 const Composition: React.FC = () => {
+  const isValid = true;
+
   const { id } = useParams();
   const { data: composition, refetch } = useQuery({
     queryKey: "getComposition",
@@ -59,6 +62,25 @@ const Composition: React.FC = () => {
       setLike(likes?.compositions.includes(id!));
     }
   }, [isLoading, likes]);
+
+  const activeRef = useRef<null | HTMLDivElement>(null);
+
+    useEffect(() => {
+    const handleClickOutside = (event: Event) => {
+      //  if( activeRef === null ) {
+          
+      //  }
+      if (!event.composedPath().includes(activeRef.current)) {
+
+        setActivePoint("");
+      }
+    };
+
+    document.body.addEventListener("click", handleClickOutside);
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const { mutate: addPoint } = useMutation({
     mutationKey: "addPoint",
@@ -132,7 +154,7 @@ const Composition: React.FC = () => {
     });
 
   return (
-    <main className="container pt-5 flex flex-col min-h-screen">
+    <main ref={activeRef} className="container pt-5 flex flex-col min-h-screen">
       <div className="flex-grow">
         <div
           className="w-full relative rounded-2xl p-2 min-h-20"
@@ -151,11 +173,12 @@ const Composition: React.FC = () => {
                 activePoint={activePoint}
                 x={x * rect.width}
                 key={product_id}
-                y={y * rect.height}
+                y={y * rect.height} deleteFunc={deletePoint}
               />
             ))}
           {userName === "admin" && (point.x !== 0 || point.y !== 0) && (
             <Point
+              // id={point.id}
               activePoint={activePoint}
               product_id={""}
               x={point.x}
@@ -238,14 +261,15 @@ const Composition: React.FC = () => {
                 }
               }}
               sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Movie" />}
+              renderInput={(params) => <TextField {...params} label="Продукты" />}
             />
             <Link to={"/add/product"} className="block pt-5">
-              <Button title="Создать новый" />
+              <Button title="Создать новый продукт" />
             </Link>
           </>
         )}
         {activePoint && (
+          // ref={activeRef}
           <div className="grid grid-cols-2 pt-5 gap-5 relative">
             <img
               src={`${import.meta.env.VITE_API_URL}/products/${
@@ -256,7 +280,7 @@ const Composition: React.FC = () => {
             />
 
             <div className="flex flex-col font-bold justify-between">
-              <span>{currentProduct?.name}</span>
+              <span className="zag">{currentProduct?.name}</span>
               <p className="col-span-2 relative break-words font-light overflow-scroll w-3/4">
                 {currentProduct?.description}
               </p>
@@ -283,6 +307,7 @@ const Composition: React.FC = () => {
         )}
       </div>
       <BottomPanel
+      isValid={isValid}
         deleteFunc={
           userName === "admin"
             ? activePoint

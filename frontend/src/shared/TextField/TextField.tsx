@@ -25,7 +25,7 @@ const TextField: React.FC<ITextField> = forwardRef(
           {...props}
         ></textarea>
       ) : (
-        <>
+        <div className="flex flex-col text-start w-full">
           <input
             ref={ref as React.Ref<HTMLInputElement>}
             className={`${style.input} ${className}`}
@@ -34,8 +34,8 @@ const TextField: React.FC<ITextField> = forwardRef(
             {...props}
             type={type}
           />
-          <span>{errorMessage}</span>
-        </>
+          <span className="text-red-500">{errorMessage}</span>
+        </div>
       )}
     </>
   )

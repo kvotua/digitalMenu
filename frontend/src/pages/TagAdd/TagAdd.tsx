@@ -1,54 +1,62 @@
-import { useState } from "react";
 import { useMutation } from "react-query";
 import { apiWithAuth } from "src/app/Http";
 import { TextField } from "src/shared/TextField/TextField";
 import { BottomPanel } from "src/widgets/BottomPanel/BottomPanel";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import ColorPicker from "./Color";
+import { useForm } from "react-hook-form";
 
 const TagAdd: React.FC = () => {
-  const [tagInfo, setTagInfo] = useState({
-    name: "",
-    color: "",
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+  } = useForm({
+    values: {
+      name: "",
+      color: "",
+    },
   });
+  
   const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationKey: "addTag",
-    mutationFn: async () => {
-      return apiWithAuth.post("/tags/", tagInfo);
+    mutationFn: async (data: { name: string; color: string }) => {
+      return apiWithAuth.post("/tags/", data);
     },
     onSuccess: () => navigate(-1),
   });
   return (
     <main className="container pt-5 flex flex-col h-screen">
-      <div className="flex-grow">
+      <form
+        onSubmit={handleSubmit((data) => mutate(data))}
+        id="tag"
+        className="flex-grow"
+      >
         <h2 className="pb-2 pl-1">Название и цвет раздела</h2>
-        <div className="flex gap-5 items-center ">
+        <div className="flex gap-3 items-center ">
           <TextField
-            value={tagInfo.name}
-            setValue={(e) => setTagInfo({ ...tagInfo, name: e.target.value })}
+            placeholder="Введите название раздела"
+            {...register("name", { required: "Имя раздела обязательно" })}
+            errorMessage={errors.name?.message}
           />
-          <label htmlFor="color">
-            <input
-              onChange={(e) =>
-                setTagInfo({ ...tagInfo, color: e.target.value })
-              }
-              type="color"
-              id="color"
-              className="w-0 h-0 absolute opacity-0"
-            />
-            <div
-              className="w-16 h-16 rounded-full border border-[#ae88f1] flex justify-center items-center"
-              style={{ background: tagInfo.color }}
-            >
-              {/* {tagInfo.color ? null : ( */}
-                <img src="/ColorPicker.svg" alt="color picker" className="w-10 rounded-full" />
-              {/* )} */}
-            </div>
-          </label>
         </div>
-      </div>
+        <br /> <br />
+        <div className="flex justify-center ">
 
-      <BottomPanel doneFunc={mutate} />
+        {/* <label htmlFor="color">
+          <ColorPicker controller={control} {...register("color", { required: true })} />
+        </label> */}
+        
+        </div>
+        <br />
+        <br />
+        {/* <Component /> */}
+      </form>
+
+      <BottomPanel form="tag" isValid={isValid} />
     </main>
   );
 };

@@ -19,7 +19,7 @@ const Header: React.FC = () => {
         <header className={`${style.header}`}>
           <ul className={style.container}>
             <Tag
-              color={"#88b874"}
+              // color={"#88b874"}
               title={"Все"}
               id={"0"}
               tagId={tagId}
@@ -30,7 +30,7 @@ const Header: React.FC = () => {
             />
             {likes?.compositions && likes.compositions.length > 0 && (
               <Tag
-                color={"pink"}
+                // color={"pink"}
                 title={"Избранное"}
                 id={"-1"}
                 tagId={tagId}
@@ -44,7 +44,7 @@ const Header: React.FC = () => {
             {tags?.map(({ color, name, id }) => (
               <li key={id} onClick={() => dispatch(setFilter(id))}>
                 <Tag
-                  color={color}
+                  // color={color}
                   title={name}
                   id={id}
                   tagId={tagId}
@@ -54,11 +54,12 @@ const Header: React.FC = () => {
             ))}
           </ul>
           {userName === "admin" && (
+            
             <Link to={"/tag/add"} className={style.cart}>
               <div className={style.innerTags}>
                 <img src="/add.svg" className="w-10 h-10" />
               </div>
-              <span className={style.innerText}>Добавить</span>
+              <span className={style.innerText}>Добавить <br /> раздел</span>
             </Link>
           )}
         </header>

@@ -129,7 +129,7 @@ const CompositionAdd: React.FC = () => {
             </Select>
           </FormControl>
         </div>
-        <BottomPanel doneFunc={mutate} disabled={isLoading} />
+        <BottomPanel isValid={true} doneFunc={mutate} disabled={isLoading} />
       </main>
     </>
   );

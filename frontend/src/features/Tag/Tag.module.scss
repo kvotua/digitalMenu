@@ -1,8 +1,9 @@
 .tags{
-    @apply flex flex-col items-center; 
+    @apply flex flex-col  items-center; 
 
     .innerTags{
-        @apply w-16 h-16 bg-black rounded-full relative;
+        @apply bg-center w-16 h-16 bg-black rounded-full justify-center items-center relative;
+        
     }
     .innerText {
         @apply font-light whitespace-nowrap text-sm;

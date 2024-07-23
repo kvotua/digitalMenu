@@ -5,6 +5,7 @@ import { apiWithAuth } from "src/app/Http";
 import { useAppDispatch } from "src/app/hooks/useAppDispatch";
 import { setFilter } from "src/app/Store/slices/filterSlice";
 import { useAppSelector } from "src/app/hooks/useAppSelector";
+import "./Tag.css";
 const Tag: React.FC<ITagProps> = ({
   color,
   title,
@@ -38,12 +39,15 @@ const Tag: React.FC<ITagProps> = ({
           tagId === id &&
           tagId !== "0" &&
           tagId !== "-1" && (
+            <><div className="round_trash">
             <img
-              src="/trash.svg"
-              alt="trash"
-              className="absolute w-5 -bottom-0 -right-0"
+              src="/trash2.svg"
+              alt="trash2"
+              className="relative w-15 -bottom-0 -right-0 "
               onClick={() => deleteTag()}
             />
+            </div></>
+            
           )}
       </div>
       <span className={style.innerText}>
