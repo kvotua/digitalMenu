@@ -59,7 +59,15 @@ async def get_image(
     path = f"/storage/{id}"
     if not os.path.isfile(path):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found")
-    return FileResponse(path, media_type="image/*")
+    return FileResponse(path,  media_type="image/*")
+
+async def get_video(
+    id: Annotated[CompositionId, Path()],
+) -> FileResponse:
+    path = f"/storage/{id}"
+    if not os.path.isfile(path):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found")
+    return FileResponse(path,  media_type="video/*")
 
 
 @router.get(
@@ -102,6 +110,23 @@ async def post_composition_image(
     await image.seek(0)
     with open(f"/storage/{id}", "wb") as file:
         file.write(image.file.read())
+
+@router.post(
+"/{id}/video",
+description="Add video to composition",
+dependencies=[Depends(check_admin)],
+)
+async def post_composition_video(
+    token: Annotated[JWToken, Header()],
+    id: Annotated[CompositionId, Path()],
+    video: UploadFile,
+) -> None:
+    if not exist(id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
+    validate_file_size_type(video)
+    await video.seek(0)
+    with open(f"/storage/{id}", "wb") as file:
+        file.write(video.file.read())
 
 
 @router.post(

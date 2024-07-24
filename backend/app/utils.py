@@ -8,7 +8,9 @@ from app.config import JWT_SECRET
 from app.schemas import JWToken, UserId
 from app.users.models import UserModel
 
-FILE_SIZE = 2097152  # 2MB
+FILE_SIZE_IMAGE = 2147483648  # 2гб в байтах
+FILE_SIZE_VIDEO = 2147483648  # 2гб в байтах
+
 
 ACCEPTED_FILE_TYPES = (
     "image/png",
@@ -17,6 +19,8 @@ ACCEPTED_FILE_TYPES = (
     "image/heic",
     "image/heif",
     "image/heics",
+    "video/mp4",
+    "video/gif",
     "png",
     "jpeg",
     "jpg",
@@ -42,9 +46,17 @@ def check_admin(user_id: Annotated[UserId, Depends(jwt_to_id)]) -> None:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Only admin")
 
 
-def validate_file_size_type(file) -> None:
+def validate_file_size_image(file) -> None:
     file_info = filetype.guess(file.file)
     if file_info is None:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Unable to determine file type",
+        )
+    
+    def validate_file_size_video(file) -> None:
+     file_info = filetype.guess(file.file)
+     if file_info is None:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail="Unable to determine file type",
@@ -64,7 +76,9 @@ def validate_file_size_type(file) -> None:
     real_file_size = 0
     for chunk in file.file:
         real_file_size += len(chunk)
-        if real_file_size > FILE_SIZE:
+        if real_file_size > FILE_SIZE_IMAGE:
             raise HTTPException(
                 status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Too large"
+
+                
             )
