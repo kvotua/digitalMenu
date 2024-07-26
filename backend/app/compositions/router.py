@@ -29,7 +29,7 @@ from app.compositions.service import (
     unlike,
 )
 from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
-from app.utils import check_admin, jwt_to_id, validate_file_size_type
+from app.utils import check_admin, jwt_to_id, validate_file_size_image, validate_file_size_video
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])
 
@@ -69,6 +69,14 @@ async def get_video(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found")
     return FileResponse(path,  media_type="video/*")
 
+@router.get(
+    "/{id}/video",
+    description="Get video of composition",
+    response_class=FileResponse,
+    responses={
+        200: {"content": {"video/*": {}}},
+    },
+)
 
 @router.get(
     "/",
@@ -106,15 +114,15 @@ async def post_composition_image(
 ) -> None:
     if not exist(id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
-    validate_file_size_type(image)
+    validate_file_size_image(image)
     await image.seek(0)
     with open(f"/storage/{id}", "wb") as file:
         file.write(image.file.read())
 
 @router.post(
-"/{id}/video",
-description="Add video to composition",
-dependencies=[Depends(check_admin)],
+    "/{id}/video",
+    description="Add video to composition",
+    dependencies=[Depends(check_admin)],
 )
 async def post_composition_video(
     token: Annotated[JWToken, Header()],
@@ -123,7 +131,7 @@ async def post_composition_video(
 ) -> None:
     if not exist(id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wrong composition ID")
-    validate_file_size_type(video)
+    validate_file_size_video(video)
     await video.seek(0)
     with open(f"/storage/{id}", "wb") as file:
         file.write(video.file.read())

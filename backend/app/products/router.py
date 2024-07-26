@@ -25,7 +25,7 @@ from app.products.service import (
     update,
 )
 from app.schemas import JWToken, ProductId, UserId
-from app.utils import check_admin, jwt_to_id, validate_file_size_type
+from app.utils import check_admin, jwt_to_id, validate_file_size_image, validate_file_size_video
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -79,7 +79,7 @@ async def post_product(
     description: Annotated[str, Form(min_length=1)],
     price: Annotated[int, Form(gt=0)],
 ) -> ProductId:
-    validate_file_size_type(image)
+    validate_file_size_image(image)
     await image.seek(0)
     product_id = create_product(name, description, price)
     with open(f"/storage/{product_id}", "wb") as file:
