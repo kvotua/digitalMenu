@@ -54,9 +54,28 @@ def validate_file_size_image(file) -> None:
             detail="Unable to determine file type",
         )
     
-    def validate_file_size_video(file) -> None:
-     file_info = filetype.guess(file.file)
-     if file_info is None:
+    detected_content_type = file_info.extension.lower()
+
+    if (
+        file.content_type not in ACCEPTED_FILE_TYPES
+        or detected_content_type not in ACCEPTED_FILE_TYPES
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Unsupported file type",
+        )
+
+    real_file_size = 0
+    for chunk in file.file:
+        real_file_size += len(chunk)
+        if real_file_size > FILE_SIZE_IMAGE:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Too large"
+            )
+        
+def validate_file_size_video(file) -> None:
+    file_info = filetype.guess(file.file)
+    if file_info is None:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail="Unable to determine file type",
@@ -76,9 +95,7 @@ def validate_file_size_image(file) -> None:
     real_file_size = 0
     for chunk in file.file:
         real_file_size += len(chunk)
-        if real_file_size > FILE_SIZE_IMAGE:
+        if real_file_size > FILE_SIZE_VIDEO:
             raise HTTPException(
                 status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Too large"
-
-                
             )
