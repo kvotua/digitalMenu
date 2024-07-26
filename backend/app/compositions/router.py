@@ -1,4 +1,4 @@
-import os
+import os, logging
 from typing import Annotated, Optional
 
 from fastapi import (
@@ -13,6 +13,8 @@ from fastapi import (
     status,
 )
 from fastapi.responses import FileResponse
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 from app.compositions.schemas import Composition, Point
 from app.compositions.service import (
@@ -29,7 +31,7 @@ from app.compositions.service import (
     unlike,
 )
 from app.schemas import CompositionId, JWToken, ProductId, TagId, UserId
-from app.utils import check_admin, jwt_to_id, validate_file_size_image, validate_file_size_video
+from app.utils import ACCEPTED_FILE_TYPES, check_admin, jwt_to_id, validate_file_size_image, validate_file_size_video
 
 router = APIRouter(prefix="/compositions", tags=["Compositions"])
 
@@ -218,3 +220,6 @@ async def remove_product_from_composition(
     product_id: Annotated[ProductId, Path()],
 ) -> None:
     remove_product(id, product_id)
+
+
+    

@@ -21,6 +21,8 @@ ACCEPTED_FILE_TYPES = (
     "image/heics",
     "video/mp4",
     "video/gif",
+    "mp4",
+    "gif",
     "png",
     "jpeg",
     "jpg",
